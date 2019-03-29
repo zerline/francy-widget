@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "sage-francy/extension": true
+  }
+}
