@@ -24,12 +24,12 @@ var FrancyView = widgets.DescriptionView.extend({
         this.content.classList.add('widget-francy-content');
         this.el.appendChild(this.content);
         this.update(); // Set defaults.
-    }
+    },
 
     /**
      * Update the contents of this view
      */
-    update() {
+    update: function() {
         this.content.innerHTML = this.model.get('value');
         this.typeset(this.content);
         return widgets.StringView.prototype.update.call(this);
