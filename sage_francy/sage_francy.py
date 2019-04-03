@@ -42,11 +42,7 @@ class FrancyWidget(_String):
             # http://www.iana.org/assignments/media-types/media-types.xhtml.
             data = {
                 'text/plain': plaintext,
-                'application/vnd.francy+json': {
-                    'version_major': 1,
-                    'version_minor': 0,
-                    'model_id': self._model_id
-                }
+                'application/vnd.francy+json': self.value
             }
             display(data, raw=True)
 
