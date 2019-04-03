@@ -30,7 +30,7 @@ class FrancyWidget(_String):
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
     def _ipython_display_(self, **kwargs):
-	"""Called when `IPython.display.display` is called on the widget."""
+        """Called when `IPython.display.display` is called on the widget."""
         if self._view_name is not None:
             plaintext = repr(self)
             if len(plaintext) > 110:

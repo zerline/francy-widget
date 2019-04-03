@@ -72,7 +72,7 @@ class FrancyChart:
     def to_json(self, encoder):
         return encoder.encode(self.__dict__)
 
-class Message:
+class FrancyMessage:
     r"""
     Displays a message
     """
