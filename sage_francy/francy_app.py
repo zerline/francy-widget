@@ -50,7 +50,16 @@ class FrancyMenu:
 
 class FrancyGraph:
     r"""
-    Displays a graph (ie a Sage object)
+    Displays a graph (ie a networkx object)
+
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> from json import JSONEncoder as Encoder
+    >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
+    >>> G = nx.Graph(e)
+    >>> FG = FrancyGraph(G)
+    >>> FG.to_json(Encoder())
     """
     def __init__(self, graph, simulation=True, collapsed=True, drag=False, showNeighbours=False):
         self.graph = graph
@@ -60,11 +69,13 @@ class FrancyGraph:
         self.showNeighbours = showNeighbours
 
     def to_json(self, encoder):
-        return encoder.encode(self.__dict__)
+        d = self.__dict__
+        del d['graph']
+        return encoder.encode(d)
 
 class FrancyChart:
     r"""
-    Displays a chart (ie a Sage object)
+    Displays a chart
     """
     def __init__(self, chart):
         self.chart = chart
