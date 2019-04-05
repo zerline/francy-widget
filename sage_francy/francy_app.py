@@ -8,6 +8,19 @@ AUTHORS ::
 
 """
 from json import JSONEncoder
+from typing import NamedTuple
+from copy import copy
+
+GraphNode = NamedTuple('Node', [
+    ('id', int), ('x', int), ('y', int), ('nodeType', str), ('size', int), ('title', str), ('color', str), ('highlight', bool),
+    ('layer', int), ('parent', str), ('menus', dict), ('messages', dict), ('callbacks', dict)
+])
+GraphEdge = NamedTuple('Link', [('id', str), ('source', str), ('weight', int), ('color', str), ('target', str)])
+def tuple2dict(t):
+    ret = {}
+    for f in t._fields:
+        ret[f] = getattr(t, f)
+    return ret
 
 class FrancyApp:
     r"""
@@ -61,15 +74,65 @@ class FrancyGraph:
     >>> FG = FrancyGraph(G)
     >>> FG.to_json(Encoder())
     """
-    def __init__(self, graph, simulation=True, collapsed=True, drag=False, showNeighbours=False):
+    def __init__(self, graph, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
         self.graph = graph
         self.simulation = simulation
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
+        self.type = nodeType
+        self.nodeSize = nodeSize
+        self.color = color
+        self.highlight = True
+        self.compute()
+
+    def compute(self):
+        if self.graph.is_directed():
+            self.graphType = "directed"
+        else:
+            self.graphType = "undirected"
+        self.nodes = {}
+        count = 0
+        for n in self.graph.nodes:
+            if type(n) == type(()):
+                title = str(n[0])
+            else:
+                title = str(n)
+            count += 1
+            ident = "F%d" % count
+            self.nodes[ident] = tuple2dict(
+                GraphNode(
+                    id = ident,
+                    x = 0,
+                    y = 0,
+                    type = self.nodeType,
+                    size = self.nodeSize,
+                    title = title,
+                    color = self.color,
+                    highlight = self.highlight,
+                    layer = count,
+                    parent = "",
+                    menus = {},
+                    messages = {},
+                    callbacks = {}
+                )
+            )
+        self.links = {}
+        for e in self.graph.edges:
+            count += 1
+            ident = "F%d" % count
+            self.links[ident] = tuple2dict(
+                GraphEdge(
+                    id = ident,
+                    source = e[0],
+                    weight = 1,
+                    color = self.color,
+                    target = e[1]
+                )
+            )
 
     def to_json(self, encoder):
-        d = self.__dict__
+        d = copy(self.__dict__)
         del d['graph']
         return encoder.encode(d)
 
