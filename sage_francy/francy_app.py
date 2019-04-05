@@ -8,26 +8,46 @@ AUTHORS ::
 
 """
 from json import JSONEncoder
-from typing import NamedTuple
+from collections import defaultdict
 from copy import copy
 
-GraphNode = NamedTuple('Node', [
-    ('id', int), ('x', int), ('y', int), ('type', str), ('size', int), ('title', str),
-    ('conjugate', int), ('color', str),('highlight', bool), ('layer', int), ('parent', str),
-    ('menus', dict), ('messages', dict), ('callbacks', dict)
-])
-GraphEdge = NamedTuple('Link', [('id', str), ('source', str), ('weight', int), ('color', str), ('target', str)])
-Callback = NamedTuple('Callback', [('id', str), ('func', str), ('trigger', str), ('knownArgs', list), ('requiredArgs', dict)])
-FrancyMessage = NamedTuple('Message', [('id', str), ('type', str), ('text', str), ('title', str)])
+class fdict(dict):
+    def __init__(self, *args, **kwargs):
+        super(fdict, self).__init__(*args, **kwargs)
+        to_drop = []
+        for k in self.keys():
+            if self[k] is None:
+                to_drop.append(k)
+        for k in to_drop:
+            del(self[k])
+
+class GraphNode(fdict):
+    def __init__(self, **kwargs):
+        super(GraphNode, self).__init__([
+            ('id', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
+            ('highlight', None), ('layer', None), ('parent', ''), ('menus', {}), ('messages', {}), ('callbacks', {})
+        ], **kwargs)
+
+class GraphEdge(fdict):
+    def __init__(self, **kwargs):
+        super(GraphEdge, self).__init__([
+            ('id', None), ('source', None), ('weight', None), ('color', ''), ('target', None)
+        ], **kwargs)
+
+class Callback(fdict):
+    def __init__(self, **kwargs):
+        super(CallBack, self).__init__([
+            ('id', None), ('func', str), ('trigger', str), ('knownArgs', list), ('requiredArgs', dict)
+        ], **kwargs)
+
+class FrancyMessage(fdict):
+    def __init__(self, **kwargs):
+        super(FrancyMessage, self).__init__([
+            ('id', None), ('type', None), ('text', None), ('title', None)
+        ], **kwargs)
 
 def francy_id(i):
     return "F%d" % i
-
-def tuple2dict(t):
-    ret = {}
-    for f in t._fields:
-        ret[f] = getattr(t, f)
-    return ret
 
 class FrancyApp:
     r"""
@@ -153,36 +173,25 @@ class FrancyGraph:
                 title = str(n)
             rank += 1
             ident = francy_id(rank)
-            self.nodes[ident] = tuple2dict(
-                GraphNode(
-                    id = ident,
-                    x = 0,
-                    y = 0,
-                    type = self.nodeType,
-                    size = self.nodeSize,
-                    title = title,
-                    conjugate = 0,
-                    color = self.color,
-                    highlight = self.highlight,
-                    layer = rank,
-                    parent = "",
-                    menus = {},
-                    messages = {},
-                    callbacks = {}
-                )
+            self.nodes[ident] = GraphNode(
+                id = ident,
+                type = self.nodeType,
+                size = self.nodeSize,
+                title = title,
+                color = self.color,
+                highlight = self.highlight,
+                layer = rank
             )
         self.links = {}
         for e in self.graph.edges:
             rank += 1
             ident = francy_id(rank)
-            self.links[ident] = tuple2dict(
-                GraphEdge(
-                    id = ident,
-                    source = e[0],
-                    weight = 1,
-                    color = self.color,
-                    target = e[1]
-                )
+            self.links[ident] = GraphEdge(
+                id = ident,
+                source = e[0],
+                weight = 1,
+                color = self.color,
+                target = e[1]
             )
 
     def to_json(self, encoder):
