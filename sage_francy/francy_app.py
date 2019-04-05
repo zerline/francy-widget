@@ -12,10 +12,17 @@ from typing import NamedTuple
 from copy import copy
 
 GraphNode = NamedTuple('Node', [
-    ('id', int), ('x', int), ('y', int), ('nodeType', str), ('size', int), ('title', str), ('color', str), ('highlight', bool),
-    ('layer', int), ('parent', str), ('menus', dict), ('messages', dict), ('callbacks', dict)
+    ('id', int), ('x', int), ('y', int), ('type', str), ('size', int), ('title', str),
+    ('conjugate', int), ('color', str),('highlight', bool), ('layer', int), ('parent', str),
+    ('menus', dict), ('messages', dict), ('callbacks', dict)
 ])
 GraphEdge = NamedTuple('Link', [('id', str), ('source', str), ('weight', int), ('color', str), ('target', str)])
+Callback = NamedTuple('Callback', [('id', str), ('func', str), ('trigger', str), ('knownArgs', list), ('requiredArgs', dict)])
+FrancyMessage = NamedTuple('Message', [('id', str), ('type', str), ('text', str), ('title', str)])
+
+def francy_id(i):
+    return "F%d" % i
+
 def tuple2dict(t):
     ret = {}
     for f in t._fields:
@@ -49,15 +56,58 @@ class FrancyCanvas:
         self.height = height
         self.zoomToFit = zommToFit
         self.texTypesetting = texTypesetting
-        self.menus = []
+        self.menus = {}
         self.graph = None
         self.chart = None
-        self.messages = []
+        self.messages = {}
+
+    def add_graph(self, graph):
+        r"""
+        Input
+        ----
+        * graph -- a FrancyGraph object
+        """
+        self.graph = FrancyGraph(graph)
+
+    def add_menu(self, menu):
+        r"""
+        Input
+        ----
+        * menu -- a FrancyMenu object
+        """
+        self.menus[menu.id] = tuple2dict(menu)
+
+    def add_message(self, message):
+        r"""
+        Input
+        ----
+        * message -- a FrancyMessage named tuple
+        """
+        self.messages[message.id] = tuple2dict(message)
 
     def to_json(self, encoder):
         return encoder.encode(self.__dict__)
 
+
 class FrancyMenu:
+    def __init__(self, title, callback, menus, messages):
+        r"""
+        Input
+        ----
+        * title -- a string
+        * callback -- a Callback named tuple
+        * menus -- a list of Menu named tuples
+        * messages -- a list of FrancyMessage named tuples
+        """
+        self.title = title
+        self.callback = tuple2dict(callback)
+        self.menus = {}
+        for m in menus:
+            self.menus[m.id] = tuple2dict(m)
+        self.messages = {}
+        for m in messages:
+            self.messages[m.id] = tuple2dict(m)
+
     def to_json(self, encoder):
         return encoder.encode(self.__dict__)
 
@@ -74,32 +124,35 @@ class FrancyGraph:
     >>> FG = FrancyGraph(G)
     >>> FG.to_json(Encoder())
     """
-    def __init__(self, graph, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
+    def __init__(self, graph, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
         self.graph = graph
+        self.type = graphType
         self.simulation = simulation
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
-        self.type = nodeType
+        self.nodeType = nodeType
         self.nodeSize = nodeSize
         self.color = color
         self.highlight = True
         self.compute()
 
-    def compute(self):
-        if self.graph.is_directed():
-            self.graphType = "directed"
-        else:
-            self.graphType = "undirected"
+    def compute(self, rank=0):
+        rank += 1
+        self.id = francy_id(rank)
+        if not self.type:
+            if self.graph.is_directed():
+                self.type = "directed"
+            else:
+                self.type = "undirected"
         self.nodes = {}
-        count = 0
         for n in self.graph.nodes:
             if type(n) == type(()):
                 title = str(n[0])
             else:
                 title = str(n)
-            count += 1
-            ident = "F%d" % count
+            rank += 1
+            ident = francy_id(rank)
             self.nodes[ident] = tuple2dict(
                 GraphNode(
                     id = ident,
@@ -108,9 +161,10 @@ class FrancyGraph:
                     type = self.nodeType,
                     size = self.nodeSize,
                     title = title,
+                    conjugate = 0,
                     color = self.color,
                     highlight = self.highlight,
-                    layer = count,
+                    layer = rank,
                     parent = "",
                     menus = {},
                     messages = {},
@@ -119,8 +173,8 @@ class FrancyGraph:
             )
         self.links = {}
         for e in self.graph.edges:
-            count += 1
-            ident = "F%d" % count
+            rank += 1
+            ident = francy_id(rank)
             self.links[ident] = tuple2dict(
                 GraphEdge(
                     id = ident,
@@ -135,25 +189,3 @@ class FrancyGraph:
         d = copy(self.__dict__)
         del d['graph']
         return encoder.encode(d)
-
-class FrancyChart:
-    r"""
-    Displays a chart
-    """
-    def __init__(self, chart):
-        self.chart = chart
-
-    def to_json(self, encoder):
-        return encoder.encode(self.__dict__)
-
-class FrancyMessage:
-    r"""
-    Displays a message
-    """
-    def __init__(self, msgtype='default', title='', text=''):
-        self.msgtype = msgtype
-        self.title = title
-        self.text = text
-
-    def to_json(self, encoder):
-        return encoder.encode(self.__dict__)
