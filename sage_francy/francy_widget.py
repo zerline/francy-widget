@@ -29,10 +29,37 @@ class FrancyWidget(_String):
     _model_name = Unicode('FrancyModel').tag(sync=True)
     _model_module = Unicode('sage-francy').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
-    value = Any() # a networkx graph
+    value = Any() # should be a networkx graph
     adapter = FrancyAdapter()
 
-    def __init__(self, obj):
+    def __init__(self, obj, test_json=False):
+        self.value = obj
+        self.test_json = False
+        if test_json:
+            self.test_json = True
+            import json
+
+    def validate(self, obj, obj_class=None):
+        r"""
+        Validate object type.
+        """
+        if self.test_json:
+            try:
+                json.loads(obj)
+            except:
+                return False
+            else:
+                return True
+        if obj_class:
+            return issubclass(obj.__class__, obj_class)
+        return issubclass(obj.__class__, SageObject)
+
+    def set_value(self, obj):
+        r"""
+        Check compatibility, then set editor value.
+        """
+        if not self.validate(obj, self.value.__class__):
+            raise ValueError("Object %s is not compatible." % str(obj))
         self.value = obj
 
     def _ipython_display_(self, **kwargs):
@@ -46,10 +73,15 @@ class FrancyWidget(_String):
             # http://tools.ietf.org/html/rfc6838
             # and the currently registered mimetypes at
             # http://www.iana.org/assignments/media-types/media-types.xhtml.
+            if self.test_json:
+                json_data = self.value
+            else:
+                json_data = self.adapter.to_json(self.value)
             data = {
                 'text/plain': plaintext,
-                'application/vnd.francy+json': self.adapter.to_json(self.value)
+                'application/vnd.francy+json': json_data
             }
+
             display(data, raw=True)
 
             self._handle_displayed(**kwargs)
