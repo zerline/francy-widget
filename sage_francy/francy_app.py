@@ -52,36 +52,66 @@ def francy_id(i):
 class FrancyApp:
     r"""
     To be displayed in a Francy Widget
+
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
+    >>> G = nx.Graph(e)
+    >>> app = FrancyApp()
+    >>> app.set_graph(G)
+    >>> app.to_json()
     """
     def __init__(self, version='1.1.1'):
         self.version = version
         self.mime = "application/vnd.francy+json"
         self.canvas = None
+        self.encoder = JSONEncoder()
 
     def add_canvas(self, c):
         self.canvas = c
 
-    def to_json(self, encoder):
+    def set_graph(self, obj):
+        if not self.canvas:
+            self.add_canvas(FrancyCanvas(title='')) #str(obj)))
+        self.canvas.set_graph(obj)
+
+    def to_dict(self):
+        d = copy(self.__dict__)
+        del d['encoder']
+        if 'canvas' in d.keys() and not isinstance(d['canvas'], dict):
+            d['canvas'] = d['canvas'].to_dict()
+        return d
+
+    def to_json(self, encoder=None):
         if not encoder:
-            encoder = JSONEncoder()
-        return encoder.encode(self.__dict__)
+            encoder = self.encoder
+        return self.encoder.encode(self.to_dict())
 
 class FrancyCanvas:
     r"""
     Displays a canvas
+
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
+    >>> G = nx.Graph(e)
+    >>> FC = FrancyCanvas()
+    >>> FC.set_graph(G)
+    >>> FC.to_json(JSONEncoder())
     """
     def __init__(self, title="My Canvas", width=800, height=100, zoomToFit=True, texTypesetting=False):
         self.title = title
         self.width = width
         self.height = height
-        self.zoomToFit = zommToFit
+        self.zoomToFit = zoomToFit
         self.texTypesetting = texTypesetting
-        self.menus = {}
         self.graph = None
-        self.chart = None
+        self.menus = {}
         self.messages = {}
 
-    def add_graph(self, graph):
+    def set_graph(self, graph):
         r"""
         Input
         ----
@@ -105,8 +135,14 @@ class FrancyCanvas:
         """
         self.messages[message.id] = tuple2dict(message)
 
+    def to_dict(self):
+        d = copy(self.__dict__)
+        if 'graph' in d.keys():
+            d['graph'] = d['graph'].to_dict()
+        return d
+
     def to_json(self, encoder):
-        return encoder.encode(self.__dict__)
+        return encoder.encode(self.to_dict())
 
 
 class FrancyMenu:
@@ -138,11 +174,10 @@ class FrancyGraph:
     Examples
     --------
     >>> import networkx as nx
-    >>> from json import JSONEncoder as Encoder
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G = nx.Graph(e)
     >>> FG = FrancyGraph(G)
-    >>> FG.to_json(Encoder())
+    >>> FG.to_json(JSONEncoder())
     """
     def __init__(self, graph, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
         self.graph = graph
@@ -194,7 +229,11 @@ class FrancyGraph:
                 target = e[1]
             )
 
-    def to_json(self, encoder):
+    def to_dict(self):
         d = copy(self.__dict__)
         del d['graph']
-        return encoder.encode(d)
+        print(d)
+        return d
+
+    def to_json(self, encoder):
+        return encoder.encode(self.to_dict())

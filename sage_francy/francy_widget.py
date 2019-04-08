@@ -9,7 +9,8 @@ AUTHORS ::
 """
 from ipywidgets import register
 from ipywidgets.widgets.widget_string import _String
-from traitlets import Unicode
+from traitlets import Unicode, Any
+from .francy_app import FrancyApp
 
 css_lines = []
 css_lines.append(".widget-francy {font-size: 13px;}")
@@ -28,6 +29,12 @@ class FrancyWidget(_String):
     _model_name = Unicode('FrancyModel').tag(sync=True)
     _model_module = Unicode('sage-francy').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
+    value = Any() # a networkx graph
+    adapter = FrancyApp()
+
+    def __init__(self, obj):
+        self.value = obj
+        self.adapter.set_graph(obj)
 
     def _ipython_display_(self, **kwargs):
         """Called when `IPython.display.display` is called on the widget."""
@@ -40,9 +47,10 @@ class FrancyWidget(_String):
             # http://tools.ietf.org/html/rfc6838
             # and the currently registered mimetypes at
             # http://www.iana.org/assignments/media-types/media-types.xhtml.
+            self.adapter.set_graph(self.value)
             data = {
                 'text/plain': plaintext,
-                'application/vnd.francy+json': self.value
+                'application/vnd.francy+json': self.adapter.to_json()
             }
             display(data, raw=True)
 
