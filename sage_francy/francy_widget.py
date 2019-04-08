@@ -10,7 +10,7 @@ AUTHORS ::
 from ipywidgets import register
 from ipywidgets.widgets.widget_string import _String
 from traitlets import Unicode, Any
-from .francy_app import FrancyAdapter
+from .francy_adapter import FrancyAdapter
 
 css_lines = []
 css_lines.append(".widget-francy {font-size: 13px;}")

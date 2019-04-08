@@ -58,8 +58,8 @@ class FrancyAdapter:
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G = nx.Graph(e)
-    >>> app = FrancyAdapter()
-    >>> app.to_json(G)
+    >>> a = FrancyAdapter()
+    >>> a.to_json(G)
     """
     def __init__(self, version='1.1.1'):
         self.version = version
