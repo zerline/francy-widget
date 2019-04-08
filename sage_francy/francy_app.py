@@ -215,10 +215,10 @@ class FrancyGraph:
             ident = francy_id(rank)
             self.links[ident] = GraphEdge(
                 id = ident,
-                source = e[0],
+                source = francy_id(e[0]),
                 weight = 1,
                 color = self.color,
-                target = e[1]
+                target = francy_id(e[1])
             )
 
     def to_dict(self):
