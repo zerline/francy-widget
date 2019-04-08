@@ -49,32 +49,23 @@ class FrancyMessage(fdict):
 def francy_id(i):
     return "F%d" % i
 
-class FrancyApp:
+class FrancyAdapter:
     r"""
-    To be displayed in a Francy Widget
+    An adapter for representing a graph in a sage-francy Francy Widget
 
     Examples
     --------
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G = nx.Graph(e)
-    >>> app = FrancyApp()
-    >>> app.set_graph(G)
-    >>> app.to_json()
+    >>> app = FrancyAdapter()
+    >>> app.to_json(G)
     """
     def __init__(self, version='1.1.1'):
         self.version = version
         self.mime = "application/vnd.francy+json"
         self.canvas = None
         self.encoder = JSONEncoder()
-
-    def add_canvas(self, c):
-        self.canvas = c
-
-    def set_graph(self, obj):
-        if not self.canvas:
-            self.add_canvas(FrancyCanvas(title='')) #str(obj)))
-        self.canvas.set_graph(obj)
 
     def to_dict(self):
         d = copy(self.__dict__)
@@ -83,9 +74,10 @@ class FrancyApp:
             d['canvas'] = d['canvas'].to_dict()
         return d
 
-    def to_json(self, encoder=None):
-        if not encoder:
-            encoder = self.encoder
+    def to_json(self, obj):
+        if not self.canvas:
+            self.canvas = FrancyCanvas(title='') #str(obj)))
+        self.canvas.set_graph(obj)
         return self.encoder.encode(self.to_dict())
 
 class FrancyCanvas:
@@ -232,7 +224,6 @@ class FrancyGraph:
     def to_dict(self):
         d = copy(self.__dict__)
         del d['graph']
-        print(d)
         return d
 
     def to_json(self, encoder):
