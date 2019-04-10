@@ -67,7 +67,10 @@ class FrancyAdapter:
         self.canvas = None
         self.encoder = JSONEncoder()
 
-    def to_dict(self):
+    def to_dict(self, obj):
+        if not self.canvas:
+            self.canvas = FrancyCanvas(title=repr(obj))
+        self.canvas.set_graph(obj)
         d = copy(self.__dict__)
         del d['encoder']
         if 'canvas' in d.keys() and not isinstance(d['canvas'], dict):
@@ -75,10 +78,7 @@ class FrancyAdapter:
         return d
 
     def to_json(self, obj):
-        if not self.canvas:
-            self.canvas = FrancyCanvas(title='') #str(obj)))
-        self.canvas.set_graph(obj)
-        return self.encoder.encode(self.to_dict())
+        return self.encoder.encode(self.to_dict(obj))
 
 class FrancyCanvas:
     r"""
