@@ -271,6 +271,10 @@ class FrancyGraph(FrancyOutput):
                 color = self.color,
                 target = self.nodes[e[1]]['id']
             )
+        if self.type == "tree":
+            # specify node parents
+            for (src, tgt) in self.obj.edges:
+                self.nodes[tgt]['parent'] = self.nodes[src]['id']
 
     def to_dict(self):
         for n in self.obj.nodes: # replace original # with new ids
