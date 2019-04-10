@@ -216,7 +216,7 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F17", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F21": {"id": "F21", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}, "F24": {"id": "F24", "source": "F20", "weight": 1, "color": "", "target": "F21"}}}'
     """
-    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
+    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeTypes=['circle'], nodeSize=10, color="", highlight=True):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.type = graphType
@@ -224,7 +224,10 @@ class FrancyGraph(FrancyOutput):
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
-        self.nodeType = nodeType
+        self.nodeType = nodeTypes[0]
+        self.shapes = None
+        if len(nodeTypes) > 1 and len(nodeTypes) == len(self.obj.nodes):
+            self.shapes = nodeTypes
         self.nodeSize = nodeSize
         self.color = color
         self.highlight = True
@@ -232,7 +235,6 @@ class FrancyGraph(FrancyOutput):
 
     def compute(self):
         counter = self.counter
-        counter += 1
         layer = 0
         self.id = francy_id(counter)
         if not self.type:
@@ -249,11 +251,15 @@ class FrancyGraph(FrancyOutput):
             counter += 1
             layer += 1
             ident = francy_id(counter)
+            if self.shapes:
+                nodeType = self.shapes[counter - self.counter -1]
+            else:
+                nodeType = self.nodeType
             # construct a dict with original node ids
             # this is necessary to compute the edges after that
             self.nodes[n] = GraphNode(
                 id = ident,
-                type = self.nodeType,
+                type = nodeType,
                 size = self.nodeSize,
                 title = title,
                 color = self.color,
