@@ -32,9 +32,11 @@ class FrancyWidget(_String):
     value = Any() # should be a networkx graph
     adapter = FrancyAdapter()
 
-    def __init__(self, obj, test_json=False):
+    def __init__(self, obj, counter=-1, test_json=False):
         self.value = obj
         self.test_json = False
+        if counter > -1:
+            self.adapter.counter = counter # FIXME not tested
         if test_json:
             self.test_json = True
             import json

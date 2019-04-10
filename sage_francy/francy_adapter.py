@@ -115,16 +115,22 @@ class FrancyAdapter(FrancyOutput):
         self.mime = "application/vnd.francy+json"
         self.canvas = None
 
-    def to_dict(self, obj):
+    def to_dict(self, obj, **kws):
+        canvas_kws = {}
+        canvas_kws['title'] = "A graph of type %s" % repr(type(obj)) # default title
+        for k in ['title', 'width', 'height', 'zoomToFit', 'texTypesetting']:
+            if k in kws:
+                canvas_kws[k] = kws[k]
+                del kws[k]
         if not self.canvas:
-            self.canvas = FrancyCanvas(self.counter, self.encoder, title="A graph of type %s" % repr(type(obj)))
-        self.canvas.set_graph(obj)
+            self.canvas = FrancyCanvas(self.counter, self.encoder, **canvas_kws)
+        self.canvas.set_graph(obj, **kws)
         d = super(FrancyAdapter, self).to_dict()
         del d['id']
         return d
 
-    def to_json(self, obj):
-        return self.encoder.encode(self.to_dict(obj))
+    def to_json(self, obj, **kws):
+        return self.encoder.encode(self.to_dict(obj, **kws))
 
 class FrancyCanvas(FrancyOutput):
     r"""
@@ -151,13 +157,13 @@ class FrancyCanvas(FrancyOutput):
         self.menus = {}
         self.messages = {}
 
-    def set_graph(self, graph):
+    def set_graph(self, graph, **kws):
         r"""
         Input
         ----
         * graph -- a FrancyGraph object
         """
-        self.graph = FrancyGraph(graph, self.counter, self.encoder)
+        self.graph = FrancyGraph(graph, self.counter, self.encoder, **kws)
 
     def add_menu(self, menu):
         r"""
