@@ -107,7 +107,7 @@ class FrancyAdapter(FrancyOutput):
     >>> a = FrancyAdapter()
     >>> a.to_json(G)
     """
-    def __init__(self, version='1.1.1', counter=-1):
+    def __init__(self, version='1.1.3', counter=-1):
         super(FrancyAdapter, self).__init__(counter=counter)
         self.version = version
         self.mime = "application/vnd.francy+json"
@@ -223,6 +223,7 @@ class FrancyGraph(FrancyOutput):
     def compute(self):
         counter = self.counter
         counter += 1
+        layer = 0
         self.id = francy_id(counter)
         if not self.type:
             if self.obj.is_directed():
@@ -236,15 +237,18 @@ class FrancyGraph(FrancyOutput):
             else:
                 title = str(n)
             counter += 1
+            layer += 1
             ident = francy_id(counter)
-            self.nodes[ident] = GraphNode(
+            # construct a dict with original node ids
+            # this is necessary to compute the edges after that
+            self.nodes[n] = GraphNode(
                 id = ident,
                 type = self.nodeType,
                 size = self.nodeSize,
                 title = title,
                 color = self.color,
                 highlight = self.highlight,
-                layer = counter
+                layer = layer
             )
         self.links = {}
         for e in self.obj.edges:
@@ -252,8 +256,19 @@ class FrancyGraph(FrancyOutput):
             ident = francy_id(counter)
             self.links[ident] = GraphEdge(
                 id = ident,
-                source = francy_id(e[0]),
+                source = self.nodes[e[0]]['id'],
                 weight = 1,
                 color = self.color,
-                target = francy_id(e[1])
+                target = self.nodes[e[1]]['id']
             )
+
+    def to_dict(self):
+        for n in self.obj.nodes: # replace original # with new ids
+            self.nodes[self.nodes[n]['id']] = self.nodes[n]
+        for n in self.obj.nodes:
+            del self.nodes[n]
+        d = super(FrancyGraph, self).to_dict()
+        for k in ['nodeType', 'nodeSize', 'color', 'highlight']:
+            if k in d:
+                del d[k]
+        return d
