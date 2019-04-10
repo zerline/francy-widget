@@ -123,8 +123,13 @@ class FrancyAdapter(FrancyOutput):
                 canvas_kws[k] = kws[k]
                 del kws[k]
         if not self.canvas:
+<<<<<<< HEAD
             self.canvas = FrancyCanvas(self.counter, self.encoder, **canvas_kws)
         self.canvas.set_graph(obj, **kws)
+=======
+            self.canvas = FrancyCanvas(self.counter, self.encoder, title="A graph of type %s" % repr(type(obj)))
+        self.canvas.set_graph(obj)
+>>>>>>> 9ae5ca9... Adding valid doctests.
         d = super(FrancyAdapter, self).to_dict()
         del d['id']
         return d
