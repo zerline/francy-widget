@@ -89,13 +89,6 @@ class FrancyOutput:
     def to_json(self):
         return self.encoder.encode(self.to_dict())
 
-class FrancyMessage(fdict, FrancyOutput):
-    def __init__(self, counter, **kwargs):
-        fdict.__init__([
-            ('id', None), ('type', None), ('text', None), ('title', None)
-        ], **kwargs)
-        FrancyOutput.__init__(counter)
-
 class FrancyAdapter(FrancyOutput):
     r"""
     An adapter for representing a graph in a sage-francy Francy Widget
@@ -297,3 +290,19 @@ class FrancyGraph(FrancyOutput):
         if not d['shapes']:
             del d['shapes']
         return d
+
+class FrancyMessage(FrancyOutput):
+    r"""
+    Displays a message
+
+    Examples
+    --------
+    >>> m = FrancyMessage(text="There are 8 levels in this Group.")
+    >>> m.to_json()
+    '{"id": "F1", "type": "default", "title": "", "text": "There are 8 levels in this Group."}'
+    """
+    def __init__(self, counter=0, encoder=None, msgType="default", title="", text=""):
+        super(FrancyMessage, self).__init__(counter)
+        self.type = msgType
+        self.title = title
+        self.text = text
