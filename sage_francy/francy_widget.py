@@ -32,14 +32,15 @@ class FrancyWidget(_String):
     value = Any() # should be a networkx graph
     adapter = FrancyAdapter()
 
-    def __init__(self, obj, counter=-1, test_json=False):
+    def __init__(self, obj, counter=-1, **kws):
         self.value = obj
-        self.test_json = False
         if counter > -1:
             self.adapter.counter = counter # FIXME not tested
-        if test_json:
+        self.test_json = False
+        if 'test_json' in kws and kws['test_json']:
             self.test_json = True
             import json
+        self.draw_params = kws
 
     def validate(self, obj, obj_class=None):
         r"""
@@ -64,7 +65,7 @@ class FrancyWidget(_String):
             raise ValueError("Object %s is not compatible." % str(obj))
         self.value = obj
 
-    def _ipython_display_(self, **kwargs):
+    def _ipython_display_(self, **kws):
         """Called when `IPython.display.display` is called on the widget."""
         if self._view_name is not None:
             plaintext = repr(self)
@@ -78,7 +79,7 @@ class FrancyWidget(_String):
             if self.test_json:
                 json_data = self.value
             else:
-                json_data = self.adapter.to_json(self.value)
+                json_data = self.adapter.to_json(self.value, **self.draw_params)
             data = {
                 'text/plain': plaintext,
                 'application/vnd.francy+json': json_data
@@ -86,4 +87,4 @@ class FrancyWidget(_String):
 
             display(data, raw=True)
 
-            self._handle_displayed(**kwargs)
+            self._handle_displayed(**kws)
