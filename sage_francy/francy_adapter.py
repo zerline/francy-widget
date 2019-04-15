@@ -12,7 +12,15 @@ from collections import defaultdict
 from copy import copy
 
 class fdict(dict):
+    r"""
+    A Sage Francy dictionary.
+    """
     def __init__(self, *args, **kwargs):
+        r"""
+        Initialize a Sage Francy dictionary.
+        All None values will be deleted
+        at the end of initialization
+        """
         super(fdict, self).__init__(*args, **kwargs)
         to_drop = []
         for k in self.keys():
@@ -22,16 +30,30 @@ class fdict(dict):
             del(self[k])
 
 class GraphNode(fdict):
+    r"""
+    An immutable dictionary to hold Graph Nodes
+    Identified by a math object
+    """
     def __init__(self, **kwargs):
+        r"""
+        Initialize a GraphNode.
+        All None values will be deleted
+        """
         super(GraphNode, self).__init__([
-            ('id', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
-            ('highlight', None), ('layer', None), ('parent', ''), ('menus', {}), ('messages', {}), ('callbacks', {})
+            ('obj', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
+            ('highlight', None), ('layer', None), ('parent', ''), ('menus', None), ('messages', None), ('callbacks', None)
         ], **kwargs)
+
+    def __hash__(self):
+        r"""
+        Has to be hashable to become a graph's node.
+        """
+        return hash(tuple(sorted(self.items())))
 
 class GraphEdge(fdict):
     def __init__(self, **kwargs):
         super(GraphEdge, self).__init__([
-            ('id', None), ('source', None), ('weight', None), ('color', ''), ('target', None)
+            ('source', None), ('weight', None), ('color', ''), ('target', None)
         ], **kwargs)
 
 class Callback(fdict):
