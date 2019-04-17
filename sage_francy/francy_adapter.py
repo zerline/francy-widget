@@ -19,7 +19,7 @@ class fdict(dict):
         r"""
         Initialize a Sage Francy dictionary.
         All None values will be deleted
-        at the end of initialization
+        at the end of initialization.
         """
         super(fdict, self).__init__(*args, **kwargs)
         to_drop = []
@@ -38,9 +38,10 @@ class GraphNode(fdict):
         r"""
         Initialize a GraphNode.
         All None values will be deleted
+        at the end of initialization.
         """
         super(GraphNode, self).__init__([
-            ('obj', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
+            ('id', None), ('obj', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
             ('highlight', None), ('layer', None), ('parent', ''), ('menus', None), ('messages', None), ('callbacks', None)
         ], **kwargs)
 
@@ -166,8 +167,8 @@ class FrancyCanvas(FrancyOutput):
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100, zoomToFit=True, texTypesetting=False):
         super(FrancyCanvas, self).__init__(counter, encoder)
         self.title = title
-        self.width = width
-        self.height = height
+        self.width = float(width) # in case we get them
+        self.height = float(height) # as objects
         self.zoomToFit = zoomToFit
         self.texTypesetting = texTypesetting
         self.graph = None
@@ -233,7 +234,7 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F16", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"id": "F21", "source": "F17", "weight": 1, "color": "", "target": "F18"}, "F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}}}'
     """
-    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeTypes=['circle'], nodeSize=10, color="", highlight=True, make_title=repr):
+    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.type = graphType
@@ -241,19 +242,15 @@ class FrancyGraph(FrancyOutput):
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
-        self.nodeType = nodeTypes[0]
-        self.shapes = None
-        if len(nodeTypes) > 1 and len(nodeTypes) == len(self.obj.nodes):
-            self.shapes = nodeTypes
-        self.nodeSize = nodeSize
+        self.nodeType = nodeType
+        self.size = nodeSize
         self.color = color
         self.highlight = True
-        self.make_title = make_title
+        self.layer = 0
         self.compute()
 
     def compute(self):
         counter = self.counter
-        layer = 0
         self.id = francy_id(counter)
         if not self.type:
             if self.obj.is_directed():
@@ -261,28 +258,37 @@ class FrancyGraph(FrancyOutput):
             else:
                 self.type = "undirected"
         self.nodes = {}
+        # Keep track of original nodes
+        match = {}
+        #layer = 0
         for n in self.obj.nodes:
-            if type(n) == type(()):
-                title = self.make_title(n[0])
-            else:
-                title = self.make_title(n)
             counter += 1
-            layer += 1
             ident = francy_id(counter)
-            if self.shapes:
-                nodeType = self.shapes[counter - self.counter -1]
+            match[n] = ident
+            opt = {}
+            if hasattr(n, 'nodeName'):
+                title = n.nodeName
             else:
-                nodeType = self.nodeType
-            # construct a dict with original node ids
-            # this is necessary to compute the edges after that
-            self.nodes[n] = GraphNode(
+                title = str(n)
+            #layer += 1
+            if hasattr(n, 'parentNode'):
+                parent = n.parentNode
+            else:
+                parent = ""
+            for parm in ['layer', 'size', 'nodeType', 'color', 'highlight']:
+                if hasattr(n, parm):
+                    opt[parm] = getattr(n, parm)
+                else:
+                    opt[parm] = getattr(self, parm)
+            self.nodes[ident] = GraphNode(
                 id = ident,
-                type = nodeType,
-                size = self.nodeSize,
+                type = opt['nodeType'],
+                size = opt['size'],
                 title = title,
-                color = self.color,
-                highlight = self.highlight,
-                layer = layer
+                parent = parent,
+                layer = opt['layer'],
+                color = opt['color'],
+                highlight = opt['highlight']
             )
         self.links = {}
         for e in self.obj.edges:
@@ -290,28 +296,20 @@ class FrancyGraph(FrancyOutput):
             ident = francy_id(counter)
             self.links[ident] = GraphEdge(
                 id = ident,
-                source = self.nodes[e[0]]['id'],
+                source = match[e[0]],
                 weight = 1,
                 color = self.color,
-                target = self.nodes[e[1]]['id']
+                target = match[e[1]]
             )
         if self.type == "tree":
             # specify node parents
             for (src, tgt) in self.obj.edges:
-                self.nodes[tgt]['parent'] = self.nodes[src]['id']
-
-    def to_dict(self):
-        for n in self.obj.nodes: # replace original # with new ids
-            self.nodes[self.nodes[n]['id']] = self.nodes[n]
-        for n in self.obj.nodes:
-            del self.nodes[n]
-        d = super(FrancyGraph, self).to_dict()
-        for k in ['nodeType', 'nodeSize', 'color', 'highlight', 'make_title']:
-            if k in d:
-                del d[k]
-        if not d['shapes']:
-            del d['shapes']
-        return d
+                tgtNode = self.nodes[match[tgt]]
+                if not hasattr(tgtNode, 'parent'):
+                    # NB because our GraphNodes here do no act as actual graph node
+                    # but only graph node JSON representation,
+                    # we can change them although they are supposedly immutable.
+                    self.nodes[match[tgt]]['parent'] = self.nodes[match[src]]['id']
 
 class FrancyMessage(FrancyOutput):
     r"""
