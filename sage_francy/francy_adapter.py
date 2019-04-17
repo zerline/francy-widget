@@ -104,9 +104,17 @@ class FrancyOutput:
         for k in ['obj']:
             if k in d:
                 del d[k]
-        for k in ['canvas', 'graph', 'menus']:
+        for k in ['canvas', 'graph']:
             if k in d and not isinstance(d[k], dict):
                 d[k] = d[k].to_dict()
+        for k in ['menus', 'messages']:
+            if k in d:
+                if not isinstance(d[k], dict):
+                    raise TypeError(d[k])
+                mm = d[k]
+                for fid, m in mm.items():
+                    mm[fid] = m.to_dict()
+                d[k] = mm
         return d
 
     def to_json(self):
@@ -136,12 +144,20 @@ class FrancyAdapter(FrancyOutput):
 
     def to_dict(self, obj, **kws):
         canvas_kws = {}
-        canvas_kws['title'] = "A graph of type %s" % repr(type(obj)) # default title
+        canvas_kws['title'] = "A Francy graph representation" # default title
         for k in ['title', 'width', 'height', 'zoomToFit', 'texTypesetting']:
             if k in kws:
                 canvas_kws[k] = kws[k]
                 del kws[k]
         self.canvas = FrancyCanvas(self.counter, self.encoder, **canvas_kws)
+        if 'menus' in kws:
+            for men in kws['menus']:
+                self.canvas.add_menu(men)
+            del kws['menus']
+        if 'messages' in kws:
+            for msg in kws['messages']:
+                self.canvas.add_message(msg)
+            del kws['messages']
         self.canvas.set_graph(obj, **kws)
         d = super(FrancyAdapter, self).to_dict()
         del d['id']
@@ -189,15 +205,19 @@ class FrancyCanvas(FrancyOutput):
         ----
         * menu -- a FrancyMenu object
         """
-        self.menus[menu.id] = tuple2dict(menu)
+        raise NotImplementedError
 
-    def add_message(self, message):
+    def add_message(self, text, msgType="default", title=""):
         r"""
         Input
         ----
-        * message -- a FrancyMessage named tuple
+        * text -- a string
+        * title -- a string
+        * msgType -- message type
         """
-        self.messages[message.id] = tuple2dict(message)
+        self.counter += 1
+        fid = francy_id(self.counter)
+        self.messages[fid] = FrancyMessage(text=text, title=title, msgType=msgType)
 
 class FrancyMenu(FrancyOutput):
     def __init__(self, counter, encoder, title='', callback=None, menus=None, messages=None):

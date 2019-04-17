@@ -32,7 +32,7 @@ class FrancyWidget(_String):
     value = Any() # should be a networkx graph
     adapter = FrancyAdapter()
 
-    def __init__(self, obj, counter=-1, **kws):
+    def __init__(self, obj, counter=-1, menus=[], messages=[], **kws):
         self.value = obj
         if counter > -1:
             self.adapter.counter = counter # FIXME not tested
@@ -40,6 +40,8 @@ class FrancyWidget(_String):
         if 'test_json' in kws and kws['test_json']:
             self.test_json = True
             import json
+        self.menus = menus
+        self.messages = messages
         self.draw_params = kws
 
     def validate(self, obj, obj_class=None):
@@ -79,7 +81,7 @@ class FrancyWidget(_String):
             if self.test_json:
                 json_data = self.value
             else:
-                json_data = self.adapter.to_json(self.value, **self.draw_params)
+                json_data = self.adapter.to_json(self.value, menus=self.menus, messages=self.messages, **self.draw_params)
             data = {
                 'text/plain': plaintext,
                 'application/vnd.francy+json': json_data
