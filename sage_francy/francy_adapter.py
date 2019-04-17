@@ -41,7 +41,7 @@ class GraphNode(fdict):
         at the end of initialization.
         """
         super(GraphNode, self).__init__([
-            ('id', None), ('obj', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('title', ''), ('conjugate', None), ('color', ''),
+            ('id', None), ('obj', None), ('x', 0), ('y', 0), ('type', None), ('size', None), ('nodeName', ''), ('conjugate', None), ('color', ''),
             ('highlight', None), ('layer', None), ('parent', ''), ('menus', None), ('messages', None), ('callbacks', None)
         ], **kwargs)
 
@@ -268,6 +268,8 @@ class FrancyGraph(FrancyOutput):
             opt = {}
             if hasattr(n, 'nodeName'):
                 title = n.nodeName
+            elif isinstance(n, dict) and 'nodeName' in n:
+                title = n['nodeName']
             else:
                 title = str(n)
             #layer += 1
