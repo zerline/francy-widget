@@ -54,7 +54,7 @@ class GraphNode(fdict):
 class GraphEdge(fdict):
     def __init__(self, **kwargs):
         super(GraphEdge, self).__init__([
-            ('source', None), ('weight', None), ('color', ''), ('target', None)
+            ('source', None), ('weight', None), ('color', ''), ('invisible', None), ('length', None), ('target', None)
         ], **kwargs)
 
 class Callback(fdict):
@@ -101,8 +101,9 @@ class FrancyOutput:
         d = copy(self.__dict__)
         del d['counter']
         del d['encoder']
-        for k in ['obj', 'node_name', 'node_shape']:
+        for k in ['obj', 'node_color', 'node_type', 'node_name', 'node_size', 'node_highlight', 'node_layer']:
             if k in d:
+                # A math value or a function
                 del d[k]
         for k in ['canvas', 'graph']:
             if k in d and not isinstance(d[k], dict):
@@ -255,7 +256,7 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F16", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"id": "F21", "source": "F17", "weight": 1, "color": "", "target": "F18"}, "F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}}}'
     """
-    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, node_name=None, node_shape=None):
+    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, node_name=None, node_type=None, node_color=None, node_layer=None, node_size=None, node_highlight=None):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.type = graphType
@@ -269,7 +270,11 @@ class FrancyGraph(FrancyOutput):
         self.highlight = True
         self.layer = 0
         self.node_name = node_name # A function of the node
-        self.node_shape = node_shape # A function of the node
+        self.node_type = node_type
+        self.node_color = node_color
+        self.node_layer = node_layer
+        self.node_size = node_size
+        self.node_highlight = node_highlight
         self.compute()
 
     def compute(self):
@@ -302,16 +307,16 @@ class FrancyGraph(FrancyOutput):
                 parent = n.parentNode
             else:
                 parent = ""
-            for parm in ['layer', 'size', 'nodeType', 'color', 'highlight']:
+            for parm in ['layer', 'size', 'type', 'color', 'highlight']:
                 if hasattr(n, parm):
                     opt[parm] = getattr(n, parm)
-                elif parm == 'nodeType' and self.node_shape:
-                    opt[parm] = self.node_shape(n)
+                elif getattr(self, "node_" + parm):
+                    opt[parm] = getattr(self, "node_" + parm)(n)
                 else:
                     opt[parm] = getattr(self, parm)
             self.nodes[ident] = GraphNode(
                 id = ident,
-                type = opt['nodeType'],
+                type = opt['type'],
                 size = opt['size'],
                 title = title,
                 parent = parent,
