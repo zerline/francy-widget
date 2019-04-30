@@ -10,6 +10,7 @@ AUTHORS ::
 from json import JSONEncoder
 from collections import defaultdict
 from copy import copy
+FRANCY_NODE_TYPES = ['circle', 'diamond', 'square', 'default']
 
 class fdict(dict):
     r"""
@@ -252,7 +253,7 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F16", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"id": "F21", "source": "F17", "weight": 1, "color": "", "target": "F18"}, "F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}}}'
     """
-    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, weight=1, node_options=None, link_options=None):
+    def __init__(self, obj, counter, encoder, graphType='default', simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, weight=1, node_options=None, link_options=None):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.graphType = graphType
@@ -264,12 +265,14 @@ class FrancyGraph(FrancyOutput):
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
-        self.nodeType = nodeType # Default values for the nodes
-        self.nodeSize = nodeSize
+        if nodeType not in FRANCY_NODE_TYPES:
+            raise TypeError("Node type must be one of: %s" % ', '.join(FRANCY_NODE_TYPES))
+        self.nodeType = nodeType # Default value for the nodes
+        self.nodeSize = int(nodeSize) # Default value for the nodes
         self.color = color
         self.highlight = True
         self.conjugate = None
-        self.weight = weight # Default value for the links
+        self.weight = int(weight) # Default value for the links
         self.node_options = node_options # A function of the node, returning a dictionary
         self.link_options = link_options # A function of the link, returning a dictionary
         self.compute()
@@ -283,6 +286,7 @@ class FrancyGraph(FrancyOutput):
             else:
                 self.graphType = "undirected"
         self.nodes = {}
+        global FRANCY_NODE_TYPES
         # Keep track of node identifiers
         match = {}
         for n in self.obj.nodes():
@@ -303,7 +307,17 @@ class FrancyGraph(FrancyOutput):
                 if hasattr(self, parm):
                     options[parm] = getattr(self, parm) # Initialization from graph values
             if self.node_options:
-                options.update(self.node_options(n)) # Node specifics
+                node_specifics = self.node_options(n)
+                for optname in ['layer', 'conjugate']: # Typecasting (for Sage Integers ..)
+                    if optname in node_specifics:
+                        node_specifics[optname] = int(node_specifics[optname])
+                for optname in ['title']:
+                    if optname in node_specifics:
+                        node_specifics[optname] = str(node_specifics[optname])
+                if 'type' in node_specifics:
+                    if node_specifics['type'] not in FRANCY_NODE_TYPES:
+                        raise TypeError("Node type must be one of: %s" % ', '.join(FRANCY_NODE_TYPES))
+                options.update(node_specifics)
             if not 'title' in options or not options['title']:
                 options['title'] = str(n)
             if not 'layer' in options or options['layer'] is None:
