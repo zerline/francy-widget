@@ -10,7 +10,7 @@ AUTHORS ::
 from json import JSONEncoder
 from collections import defaultdict
 from copy import copy
-FRANCY_NODE_TYPES = ['circle', 'diamond', 'square', 'default']
+FRANCY_NODE_TYPES = ['circle', 'diamond', 'square']
 
 class fdict(dict):
     r"""
@@ -129,11 +129,11 @@ class FrancyAdapter(FrancyOutput):
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G1 = nx.Graph(e)
     >>> a = FrancyAdapter()
-    >>> a.to_json(G1, title="Example Undirected Graph")
-    '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "F1", "title": "Example Undirected Graph", "width": 800, "height": 100, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "F2", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"id": "F7", "source": "F3", "weight": 1, "color": "", "target": "F4"}, "F8": {"id": "F8", "source": "F4", "weight": 1, "color": "", "target": "F5"}, "F9": {"id": "F9", "source": "F5", "weight": 1, "color": "", "target": "F6"}}}, "menus": {}, "messages": {}}}'
+    >>> a.to_dict(G1, title="Example Undirected Graph")
+    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'F1', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'F2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'F3': {'id': 'F3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F4': {'id': 'F4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F5': {'id': 'F5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F6': {'id': 'F6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'F7': {'source': 'F3', 'weight': 1, 'color': '', 'target': 'F4', 'id': 'F7'}, 'F8': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F5', 'id': 'F8'}, 'F9': {'source': 'F5', 'weight': 1, 'color': '', 'target': 'F6', 'id': 'F9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
     >>> G2 = nx.DiGraph([('1', 'G'), ('G', 'SG1'), ('G', 'SG2')])
-    >>> a.to_json(G2, title="Example Tree Graph", graphType="tree", collapsed=False, nodeTypes=['square', 'circle', 'circle', 'circle'])
-    '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "F1", "title": "Example Tree Graph", "width": 800, "height": 100, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "F2", "type": "tree", "simulation": true, "collapsed": false, "drag": false, "showNeighbours": false, "shapes": ["square", "circle", "circle", "circle"], "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "G", "color": "", "highlight": true, "layer": 2, "parent": "F3", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "SG1", "color": "", "highlight": true, "layer": 3, "parent": "F4", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "SG2", "color": "", "highlight": true, "layer": 4, "parent": "F4", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"id": "F7", "source": "F3", "weight": 1, "color": "", "target": "F4"}, "F8": {"id": "F8", "source": "F4", "weight": 1, "color": "", "target": "F5"}, "F9": {"id": "F9", "source": "F4", "weight": 1, "color": "", "target": "F6"}}}, "menus": {}, "messages": {}}}'
+    >>> a.to_dict(G2, title="Example Tree Graph", graphType="tree")
+    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'F1', 'title': 'Example Tree Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'F2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'F3': {'id': 'F3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F4': {'id': 'F4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': 'G', 'color': '', 'highlight': True, 'layer': 4, 'parent': 'F3', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F5': {'id': 'F5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': 'SG1', 'color': '', 'highlight': True, 'layer': 5, 'parent': 'F4', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F6': {'id': 'F6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': 'SG2', 'color': '', 'highlight': True, 'layer': 6, 'parent': 'F4', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'F7': {'source': 'F3', 'weight': 1, 'color': '', 'target': 'F4', 'id': 'F7'}, 'F8': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F5', 'id': 'F8'}, 'F9': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F6', 'id': 'F9'}}, 'type': 'tree'}, 'menus': {}, 'messages': {}}}
     """
     def __init__(self, version='1.1.3', counter=-1):
         super(FrancyAdapter, self).__init__(counter=counter)
@@ -177,7 +177,7 @@ class FrancyCanvas(FrancyOutput):
     >>> FC = FrancyCanvas()
     >>> FC.set_graph(G)
     >>> FC.to_json()
-    '{"id": "F1", "title": "My Canvas", "width": 800, "height": 100, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "F2", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"id": "F7", "source": "F3", "weight": 1, "color": "", "target": "F4"}, "F8": {"id": "F8", "source": "F4", "weight": 1, "color": "", "target": "F5"}, "F9": {"id": "F9", "source": "F5", "weight": 1, "color": "", "target": "F6"}}}, "menus": {}, "messages": {}}'
+    '{"id": "F1", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "F2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"source": "F3", "weight": 1, "color": "", "target": "F4", "id": "F7"}, "F8": {"source": "F4", "weight": 1, "color": "", "target": "F5", "id": "F8"}, "F9": {"source": "F5", "weight": 1, "color": "", "target": "F6", "id": "F9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
     """
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100, zoomToFit=True, texTypesetting=False):
         super(FrancyCanvas, self).__init__(counter, encoder)
@@ -251,9 +251,9 @@ class FrancyGraph(FrancyOutput):
     >>> G = nx.Graph(e)
     >>> FG = FrancyGraph(G, 15, JSONEncoder())
     >>> FG.to_json()
-    '{"id": "F16", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"id": "F21", "source": "F17", "weight": 1, "color": "", "target": "F18"}, "F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}}}'
+    '{"id": "F16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"source": "F17", "weight": 1, "color": "", "target": "F18", "id": "F21"}, "F22": {"source": "F18", "weight": 1, "color": "", "target": "F19", "id": "F22"}, "F23": {"source": "F19", "weight": 1, "color": "", "target": "F20", "id": "F23"}}, "type": "undirected"}'
     """
-    def __init__(self, obj, counter, encoder, graphType='default', simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, weight=1, node_options=None, link_options=None):
+    def __init__(self, obj, counter, encoder, graphType='undirected', simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, weight=1, node_options=None, link_options=None):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.graphType = graphType
@@ -303,7 +303,9 @@ class FrancyGraph(FrancyOutput):
                 options['type'] = self.nodeType # Initialization from graph value
             if self.nodeSize:
                 options['size'] = self.nodeSize # Initialization from graph value
-            for parm in ['layer', 'color', 'highlight', 'conjugate']:
+            if self.nodeLayer:
+                options['layer'] = self.nodeLayer # Initialization from graph value
+            for parm in ['color', 'highlight', 'conjugate']:
                 if hasattr(self, parm):
                     options[parm] = getattr(self, parm) # Initialization from graph values
             if self.node_options:
@@ -366,9 +368,9 @@ class FrancyGraph(FrancyOutput):
         if 'graphType' in res:
             res['type'] = res['graphType']
             del res['graphType']
-        for attrname in ['nodeType', 'nodeSize', 'color', 'highlight', 'weight']:
-            if attrname in res:
-                del res[attrname]
+        for optname in ['nodeType', 'nodeLayer', 'nodeSize', 'color', 'highlight', 'weight']:
+            if optname in res:
+                del res[optname]
         return res
 
 class FrancyMessage(FrancyOutput):
