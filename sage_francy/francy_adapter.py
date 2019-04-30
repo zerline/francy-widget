@@ -156,12 +156,6 @@ class FrancyAdapter(FrancyOutput):
             for msg in kws['messages']:
                 self.canvas.add_message(msg)
             del kws['messages']
-        if 'node_options' in kws:
-            self.node_options =  kws['node_options']
-            del kws['node_options']
-        if 'link_options' in kws:
-            self.link_options =  kws['link_options']
-            del kws['link_options']
         self.canvas.set_graph(obj, **kws)
         d = super(FrancyAdapter, self).to_dict()
         del d['id']
@@ -289,9 +283,9 @@ class FrancyGraph(FrancyOutput):
             else:
                 self.graphType = "undirected"
         self.nodes = {}
-        # Keep track of original nodes
+        # Keep track of node identifiers
         match = {}
-        for n in self.obj.nodes:
+        for n in self.obj.nodes():
             counter += 1
             ident = francy_id(counter)
             match[n] = ident
@@ -322,7 +316,7 @@ class FrancyGraph(FrancyOutput):
                 **options)
         # Links
         self.links = {}
-        for e in self.obj.edges:
+        for (src, tgt) in self.obj.edges():
             counter += 1
             ident = francy_id(counter)
             # Calculate node options
@@ -334,10 +328,14 @@ class FrancyGraph(FrancyOutput):
                 options.update(self.link_options(n))
             self.links[ident] = GraphEdge(
                 id = ident,
-                source = match[e[0]],
-                target = match[e[1]],
+                source = match[src],
+                target = match[tgt],
                 **options
             )
+            if self.graphType == 'tree':
+                tgtNode = self.nodes[match[tgt]]
+                if (not hasattr(tgtNode, 'parent') or not getattr(tgtNode, 'parent')):
+                    self.nodes[match[tgt]]['parent'] = self.nodes[match[src]]['id']
         """
         if self.graphType == "tree":
             # specify node parents
