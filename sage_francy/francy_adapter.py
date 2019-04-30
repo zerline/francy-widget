@@ -187,8 +187,8 @@ class FrancyCanvas(FrancyOutput):
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100, zoomToFit=True, texTypesetting=False):
         super(FrancyCanvas, self).__init__(counter, encoder)
         self.title = title
-        self.width = float(width) # in case we get them
-        self.height = float(height) # as objects
+        self.width = float(width) # just in case we get them as objects
+        self.height = float(height)
         self.zoomToFit = zoomToFit
         self.texTypesetting = texTypesetting
         self.graph = None
@@ -258,19 +258,24 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F16", "type": "undirected", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 1, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"id": "F21", "source": "F17", "weight": 1, "color": "", "target": "F18"}, "F22": {"id": "F22", "source": "F18", "weight": 1, "color": "", "target": "F19"}, "F23": {"id": "F23", "source": "F19", "weight": 1, "color": "", "target": "F20"}}}'
     """
-    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, node_options=None, link_options=None):
+    def __init__(self, obj, counter, encoder, graphType=None, simulation=True, collapsed=True, drag=False, showNeighbours=False, nodeType='circle', nodeSize=10, color="", highlight=True, weight=1, node_options=None, link_options=None):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
         self.graphType = graphType
+        if graphType == "tree":
+            self.nodeLayer = 0
+        else:
+            self.nodeLayer = None
         self.simulation = simulation
         self.collapsed = collapsed
         self.drag = drag
         self.showNeighbours = showNeighbours
-        self.nodeType = nodeType
-        self.size = nodeSize
+        self.nodeType = nodeType # Default values for the nodes
+        self.nodeSize = nodeSize
         self.color = color
         self.highlight = True
         self.conjugate = None
+        self.weight = weight # Default value for the links
         self.node_options = node_options # A function of the node, returning a dictionary
         self.link_options = link_options # A function of the link, returning a dictionary
         self.compute()
@@ -297,14 +302,21 @@ class FrancyGraph(FrancyOutput):
                 options['parent'] = n.parent()
             # Other options
             if self.nodeType:
-                options['type'] = self.nodeType # Initialization at graph level
-            for parm in ['layer', 'size', 'color', 'highlight', 'conjugate']:
+                options['type'] = self.nodeType # Initialization from graph value
+            if self.nodeSize:
+                options['size'] = self.nodeSize # Initialization from graph value
+            for parm in ['layer', 'color', 'highlight', 'conjugate']:
                 if hasattr(self, parm):
-                    options[parm] = getattr(self, parm) # Initialization at graph level
+                    options[parm] = getattr(self, parm) # Initialization from graph values
             if self.node_options:
                 options.update(self.node_options(n)) # Node specifics
-            if not options['title']:
+            if not 'title' in options or not options['title']:
                 options['title'] = str(n)
+            if not 'layer' in options or options['layer'] is None:
+                options['layer'] = int(counter) # TODO remplacer par un compteur de nœuds
+            for children_list_name in ['menus', 'messages', 'callbacks']:
+                if not children_list_name in options:
+                    options[children_list_name] = {}
             self.nodes[ident] = GraphNode(
                 id = ident,
                 **options)
@@ -342,8 +354,9 @@ class FrancyGraph(FrancyOutput):
         if 'graphType' in res:
             res['type'] = res['graphType']
             del res['graphType']
-        if 'nodeType' in res:
-            del res['nodeType']
+        for attrname in ['nodeType', 'nodeSize', 'color', 'highlight', 'weight']:
+            if attrname in res:
+                del res[attrname]
         return res
 
 class FrancyMessage(FrancyOutput):
