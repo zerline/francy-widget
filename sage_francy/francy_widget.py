@@ -8,22 +8,13 @@ AUTHORS ::
 
 """
 from ipywidgets import register
-from ipywidgets.widgets.widget_string import _String
+from ipywidgets.widgets.widget_string import Text
 from traitlets import Unicode, Any
 from .francy_adapter import FrancyAdapter
 
-css_lines = []
-css_lines.append(".widget-francy {font-size: 13px;}")
-css_lines.append(".widget-francy > .widget-francy-content {/* Fill out the area in the HTML widget */\n\
-    -ms-flex-item-align: stretch;\n        align-self: stretch;\n    -webkit-box-flex: 1;\n\
-        -ms-flex-positive: 1;\n            flex-grow: 1;\n    -ms-flex-negative: 1;\n        flex-shrink: 1;\n\
-    /* Makes sure the baseline is still aligned with other elements */\n    line-height: 28px;\n\
-    /* Make it possible to have absolutely-positioned elements in the html */\n    position: relative;\n}}")
-
 @register
-class FrancyWidget(_String):
+class FrancyWidget(Text):
     """Francy widget."""
-    _view_name = Unicode('TextView').tag(sync=True)
     value = Any() # should be a networkx graph
     adapter = FrancyAdapter()
 
