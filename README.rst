@@ -31,38 +31,37 @@ shorthand::
 Usage
 -----
 
-Once the package is installed, you can use it in Sage Jupyter Notebook.
+Once the package is installed, you can use it in Jupyter Notebook.
 
     from sage_francy import FrancyWidget
-    g = graphs.PathGraph(10)
+    import networkx
+    g = network.PathGraph(3)
     w = FrancyWidget(g)
     w
 
 See the `demo notebook <demo_SageFrancy.ipynb>`_.
 
+Sage Usage
+----------
+
+This package is usable also within the Sagemath environment:
+
+See the `Sage demo <test_S4.ipynb>`_.
+
+
 Tests
 -----
 
-Once the package is installed, one can use the SageMath test system
+Once the package is installed, you can use the Python test system
 configured in ``setup.py`` to run the tests::
 
-    $ sage setup.py test
-
-This is just calling ``sage -t`` with appropriate flags.
-
-Shorthand::
-
-    $ make test
+    $ python -m doctest
 
 Documentation
 -------------
 
-The documentation of the package can be generated using Sage's
+The documentation of the package can be generated using
 ``Sphinx`` installation::
 
     $ cd docs
-    $ sage -sh -c "make html"
-
-Shorthand::
-
-    $ make doc
+    $ make html

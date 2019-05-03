@@ -35,7 +35,7 @@ setup_args = {
     'keywords': ['SageMath', 'jupyter', 'widget', 'graph'],
     'packages': ['sage_francy'],
     'zip_safe': False,
-    'install_requires': ['ipywidgets>=7.0.0', 'networkx', 'jupyter-francy']
+    'install_requires': ['ipywidgets>=7.0.0', 'networkx', 'jupyter-francy', 'Sphinx']
 }
 
 setup(**setup_args)
