@@ -1,24 +1,14 @@
 # --*- encoding: utf-8 -*--
-#from __future__ import print_function
-import os
-import sys
-import platform
+# from __future__ import print_function
 from setuptools import setup
-from codecs import open # To open the README file with proper encoding
+from codecs import open  # To open the README file with proper encoding
 
-#here = os.path.dirname(os.path.abspath(__file__))
-#node_root = os.path.join(here, 'js')
-#is_repo = os.path.exists(os.path.join(here, '.git'))
-
-#from distutils import log
-#log.set_verbosity(log.DEBUG)
-#log.info('setup.py entered')
-#log.info('$PATH=%s' % os.environ['PATH'])
 
 # Get information from separate files (README, VERSION)
 def readfile(filename):
     with open(filename,  encoding='utf-8') as f:
         return f.read()
+
 
 setup_args = {
     'name': 'sage-francy',
@@ -41,7 +31,7 @@ setup_args = {
       'Topic :: Scientific/Engineering :: Mathematics',
       'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
       'Programming Language :: Python :: 2.7',
-    ], # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    ],  # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     'keywords': ['SageMath', 'jupyter', 'widget', 'graph'],
     'packages': ['sage_francy'],
     'zip_safe': False,
