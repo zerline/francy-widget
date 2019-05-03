@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -ex
+
+pip install .
+
+jupyter nbextension enable --py --sys-prefix jupyter_francy
