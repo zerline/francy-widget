@@ -5,7 +5,7 @@ Sage Francy
 Francy Python adapter for representing graphs in Jupyter
 
 .. image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/zerline/sage-francy/master
+ :target: https://mybinder.org/v2/gh/zerline/sage-francy/master?filepath=demo_SageFrancy.ipynb
 
 
 Installation
