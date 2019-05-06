@@ -1,4 +1,4 @@
-name: sage-francy
+name: francy-widget
 channels:
   - conda-forge
 dependencies:

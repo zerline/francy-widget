@@ -11,13 +11,13 @@ def readfile(filename):
 
 
 setup_args = {
-    'name': 'sage-francy',
+    'name': 'francy-widget',
     'version': readfile("VERSION"),
     'description': 'Francy Widget for representing graphs',
     'long_description': readfile("README.rst"),
     'include_package_data': True,
     'data_files': [],
-    'url': 'https://github.com/sagemath/sage-francy',
+    'url': 'https://github.com/zerline/francy-widget',
     'author': 'Odile Bénassy',
     'author_email': 'odile.benassy@u-psud.fr',
     'license': 'GPLv3+',
@@ -32,8 +32,8 @@ setup_args = {
       'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
       'Programming Language :: Python :: 2.7',
     ],  # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    'keywords': ['SageMath', 'jupyter', 'widget', 'graph'],
-    'packages': ['sage_francy'],
+    'keywords': ['jupyter', 'widget', 'graph', 'francy'],
+    'packages': ['francy_widget'],
     'zip_safe': False,
     'install_requires': ['ipywidgets>=7.0.0', 'networkx', 'jupyter-francy', 'Sphinx']
 }

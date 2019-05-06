@@ -4,7 +4,7 @@
 Francy Adapter
 ==============
 
-.. automodule:: sage_francy.francy_adapter
+.. automodule:: francy_widget.francy_adapter
    :members:
    :special-members:
    :undoc-members:

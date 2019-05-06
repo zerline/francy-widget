@@ -4,7 +4,7 @@
 Francy Widget
 =============
 
-.. automodule:: sage_francy.francy_widget
+.. automodule:: francy_widget.francy_widget
    :members:
    :special-members:
    :undoc-members:
