@@ -50,8 +50,11 @@ class FrancyWidget(Text):
                 return True
         if obj_class:
             return issubclass(obj.__class__, obj_class)
-        from sage.all import SageObject
-        return issubclass(obj.__class__, SageObject)
+        try:
+            from sage.all import SageObject
+            return issubclass(obj.__class__, SageObject)
+        except:
+            return False
 
     def set_value(self, obj):
         r"""

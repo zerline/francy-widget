@@ -1,11 +1,11 @@
-===========
-Sage Francy
-===========
+=============
+Francy Widget
+=============
 
 Francy Python adapter for representing graphs in Jupyter
 
 .. image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/zerline/sage-francy/master?filepath=demo_SageFrancy.ipynb
+ :target: https://mybinder.org/v2/gh/zerline/francy-widget/master?filepath=demo_FrancyWidget.ipynb
 
 
 Installation
@@ -16,11 +16,11 @@ Local install from source
 
 Download the source from the git repository::
 
-    $ git clone https://github.com/zerline/sage-francy.git
+    $ git clone https://github.com/zerline/francy-widget.git
 
 Change to the root directory and run::
 
-    $ sage -pip install --upgrade --no-index -v .
+    $ pip install --upgrade --no-index -v .
 
 For convenience this package contains a [makefile](makefile) with this
 and other often used commands. Should you wish too, you can use the
@@ -39,14 +39,14 @@ Once the package is installed, you can use it in Jupyter Notebook.
     w = FrancyWidget(g)
     w
 
-See the `demo notebook <demo_SageFrancy.ipynb>`_.
+See the `demo notebook <demo_FrancyWidget.ipynb>`_.
 
 Sage Usage
 ----------
 
 This package is usable also within the Sagemath environment:
 
-See the `Sage demo <test_S4.ipynb>`_.
+See the `Sage example notebook <examples/S4.ipynb>`_.
 
 
 Tests

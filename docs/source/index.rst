@@ -10,7 +10,7 @@ which is based on an `ipywidgets` widget.
 
 To use this module, you need to import it::
 
-    from sage_francy import *
+    from francy_widget import *
 
 You can feed this widget with any python `networkx` graph::
 
@@ -24,8 +24,8 @@ This work is licensed under a `Creative Commons Attribution-Share Alike
 
 __ https://creativecommons.org/licenses/by-sa/3.0/
 
-Sage Francy
-===========
+Francy Widget
+=============
 
 .. toctree::
    :maxdepth: 2
@@ -33,7 +33,7 @@ Sage Francy
 
    francy_*
 
-.. automodule:: sage_francy
+.. automodule:: francy_widget
    :members:
    :special-members:
    :undoc-members:

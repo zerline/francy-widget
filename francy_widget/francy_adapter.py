@@ -14,11 +14,11 @@ FRANCY_NODE_TYPES = ['circle', 'diamond', 'square']
 
 class fdict(dict):
     r"""
-    A Sage Francy dictionary.
+    A Francy Widget dictionary.
     """
     def __init__(self, *args, **kwargs):
         r"""
-        Initialize a Sage Francy dictionary.
+        Initialize a Francy Widget dictionary.
         All None values will be deleted
         at the end of initialization.
         """
@@ -146,7 +146,7 @@ class FrancyOutput:
 
 class FrancyAdapter(FrancyOutput):
     r"""
-    An adapter for representing a graph in a sage-francy Francy Widget
+    An adapter for representing a graph in a Francy Widget
 
     Examples:
 

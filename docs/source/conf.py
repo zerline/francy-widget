@@ -15,8 +15,8 @@
 # General information about the project.
 project = u"Francy Python Adapter."
 copyright = u'2019, Odile Bénassy'
-package_name = 'sage_francy'
-package_folder = "../../sage_francy"
+package_name = 'francy_widget'
+package_folder = "../../francy_widget"
 authors = u"Odile Bénassy"
 
 import sys
@@ -138,7 +138,6 @@ html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-#html_theme_path = [os.path.join(SAGE_DOC_SRC, 'common', 'themes')]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
