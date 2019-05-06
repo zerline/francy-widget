@@ -4,7 +4,7 @@ A Francy Widget for the Jupyter Notebook.
 
 AUTHORS ::
 
-    Odile Bénassy, Nicolas Thiéry
+    Odile Bénassy
 
 """
 from json import JSONEncoder
@@ -92,13 +92,13 @@ class FrancyOutput:
     r"""
     A base class for Francy JSON representable objects having an id as required attribute.
 
-    Input
-    ----
+    Input:
+
     * counter -- an integer
     * encoder -- a JSON encoder
 
-    Test
-    ----
+    Test:
+
     >>> o = FrancyOutput(3)
     >>> o.encoder.__class__
     <class 'json.encoder.JSONEncoder'>
@@ -148,8 +148,8 @@ class FrancyAdapter(FrancyOutput):
     r"""
     An adapter for representing a graph in a sage-francy Francy Widget
 
-    Examples
-    --------
+    Examples:
+
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G1 = nx.Graph(e)
@@ -192,8 +192,8 @@ class FrancyCanvas(FrancyOutput):
     r"""
     Displays a canvas
 
-    Examples
-    --------
+    Examples:
+
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G = nx.Graph(e)
@@ -216,24 +216,23 @@ class FrancyCanvas(FrancyOutput):
 
     def set_graph(self, graph, **kws):
         r"""
-        Input
-        ----
+        Input:
+
         * graph -- a FrancyGraph object
         """
         self.graph = FrancyGraph(graph, self.counter, self.encoder, **kws)
 
     def add_menu(self, menu):
         r"""
-        Input
-        ----
+        Input:
+
         * menu -- a FrancyMenu object
         """
         raise NotImplementedError
 
     def add_message(self, text, msgType="default", title=""):
         r"""
-        Input
-        ----
+        Input:
         * text -- a string
         * title -- a string
         * msgType -- message type
@@ -247,8 +246,8 @@ class FrancyMenu(FrancyOutput):
     def __init__(self, counter, encoder, title='', callback=None, menus=None,
                  messages=None):
         r"""
-        Input
-        ----
+        Input:
+
         * counter -- an integer
         * encoder -- a JSON encoder
         * title -- a string
@@ -271,8 +270,8 @@ class FrancyGraph(FrancyOutput):
     r"""
     Displays a graph (ie a networkx object)
 
-    Examples
-    --------
+    Examples:
+
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]   # list of edges
     >>> G = nx.Graph(e)
@@ -410,8 +409,8 @@ class FrancyMessage(FrancyOutput):
     r"""
     Displays a message
 
-    Examples
-    --------
+    Examples:
+
     >>> m = FrancyMessage(text="There are 8 levels in this Group.")
     >>> m.to_json()
     '{"id": "F1", "type": "default", "title": "", "text": "There are 8 levels in this Group."}'
