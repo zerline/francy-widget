@@ -65,3 +65,9 @@ The documentation of the package can be generated using
 
     $ cd docs
     $ make html
+
+Thanks
+------
+All my thanks to Manuel Machado Martins for his excellent Francy package,
+to Sebastian Gutsche, Sylvain Corlay, Claus Fieker and Nicolas Thiéry
+for various help at different stages.
