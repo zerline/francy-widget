@@ -33,7 +33,7 @@ Usage
 
 Once the package is installed, you can use it in Jupyter Notebook.
 
-    from sage_francy import FrancyWidget
+    from francy_widget import FrancyWidget
     import networkx
     g = network.PathGraph(3)
     w = FrancyWidget(g)
