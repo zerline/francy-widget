@@ -4,7 +4,7 @@ A Francy Widget for the Jupyter Notebook.
 
 AUTHORS ::
 
-    Odile Bénassy, Nicolas Thiéry
+    Odile Bénassy
 
 """
 from ipywidgets import register
