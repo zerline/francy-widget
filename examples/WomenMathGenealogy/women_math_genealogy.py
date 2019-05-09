@@ -13,25 +13,29 @@ patt_student = re.compile(
     "<[\s]*/td[^>]*>" + "[\s]*" + "<[\s]*td[\s]*[^>]*>" + "[\s]*" + "([0-9]*)"
 )
 
-data = { 6967 : ('6967', 'Noether, Emmy', '1907', '1405') }
+data = { 6967 : (1, '6967', 'Noether, Emmy', '1907', '1405') }
 edges = []
 
 enc = json.JSONEncoder(ensure_ascii=False)
 out = open("output.txt", 'a')
 
-def loop(ident):
+def loop(ident, lvl):
+    lvl += 1
+    #print("lvl=", lvl)
     res = requests.get(url_patt % ident)
     html = res.content.decode()
     mm = re.findall(patt_student, html)
     for m in mm:
         if m[0] not in data:
-            data[m[0]] = m
+            data[m[0]] = tuple([lvl] + list(m))
+            #print(data[m[0]])
         out.write(m[1] + "\n")
         edges.append((str(ident), m[0]))
         print(len(data), len(edges))
         io.open('data.json', 'w', encoding='utf8').write(enc.encode(data))
         open("edges.json", 'w').write(enc.encode(edges))
     for m in mm:
-        loop(int(m[0]))
+        loop(int(m[0]), lvl)
+    lvl -= 1
 
-loop(NOETHER)
+loop(NOETHER, 1)
