@@ -84,7 +84,24 @@ class Callback(fdict):
         ], **kwargs)
 
 
-def francy_id(i):
+def canvas_id():
+    r"""
+    A random string to serve as a random canvas identifier
+
+    Test:
+
+    >>> a = canvas_id()
+    >>> len(a)
+    32
+    """
+    from hashlib import md5
+    from random import randint
+    return md5(str(randint(1, 100)).encode('utf8')).hexdigest()
+
+def francy_id(s='', type='node', counter=0):
+    return "%s_%s%d" % (s, type, counter)
+
+def basic_id(i):
     return "F%d" % i
 
 
@@ -117,7 +134,7 @@ class FrancyOutput:
             encoder = JSONEncoder()
         self.encoder = encoder
         self.obj = None
-        self.id = francy_id(counter)
+        self.id = basic_id(counter)
 
     def to_dict(self):
         d = copy(self.__dict__)
@@ -205,6 +222,7 @@ class FrancyCanvas(FrancyOutput):
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100,
                  zoomToFit=True, texTypesetting=False):
         super(FrancyCanvas, self).__init__(counter, encoder)
+        self.id = canvas_id()
         self.title = title
         self.width = float(width)  # just in case we get them as objects
         self.height = float(height)
@@ -220,7 +238,8 @@ class FrancyCanvas(FrancyOutput):
 
         * graph -- a FrancyGraph object
         """
-        self.graph = FrancyGraph(graph, self.counter, self.encoder, **kws)
+        graph_id = francy_id(self.id, 'graph', self.counter)
+        self.graph = FrancyGraph(graph, self.encoder, graphId=graph_id, **kws)
 
     def add_menu(self, menu):
         r"""
@@ -238,7 +257,7 @@ class FrancyCanvas(FrancyOutput):
         * msgType -- message type
         """
         self.counter += 1
-        fid = francy_id(self.counter)
+        fid = francy_id(self.id, 'message', self.counter)
         self.messages[fid] = FrancyMessage(text=text, title=title, msgType=msgType)
 
 
@@ -279,12 +298,14 @@ class FrancyGraph(FrancyOutput):
     >>> FG.to_json()
     '{"id": "F16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"source": "F17", "weight": 1, "color": "", "target": "F18", "id": "F21"}, "F22": {"source": "F18", "weight": 1, "color": "", "target": "F19", "id": "F22"}, "F23": {"source": "F19", "weight": 1, "color": "", "target": "F20", "id": "F23"}}, "type": "undirected"}'
     """
-    def __init__(self, obj, counter, encoder, graphType='undirected',
+    def __init__(self, obj, encoder, graphId=None, graphType='undirected',
                  simulation=True, collapsed=True, drag=False, showNeighbours=False,
                  nodeType='circle', nodeSize=10, color="", highlight=True, weight=1,
                  node_options=None, link_options=None):
         super(FrancyGraph, self).__init__(counter)
         self.obj = obj
+        if graphId:
+            self.id = graphId
         self.graphType = graphType
         if graphType == "tree":
             self.nodeLayer = 0
@@ -308,7 +329,6 @@ class FrancyGraph(FrancyOutput):
 
     def compute(self):
         counter = self.counter
-        self.id = francy_id(counter)
         if not self.graphType:
             if self.obj.is_directed():
                 self.graphType = "directed"
@@ -320,7 +340,7 @@ class FrancyGraph(FrancyOutput):
         match = {}
         for n in self.obj.nodes():
             counter += 1
-            ident = francy_id(counter)
+            ident = basic_id(counter)
             match[n] = ident
             # Calculate node options
             options = {'title': '', 'parent': ''}
@@ -364,7 +384,7 @@ class FrancyGraph(FrancyOutput):
         self.links = {}
         for (src, tgt) in self.obj.edges():
             counter += 1
-            ident = francy_id(counter)
+            ident = basic_id(counter)
             # Calculate node options
             options = {}
             for parm in ['color', 'weight']:
