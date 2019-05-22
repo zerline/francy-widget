@@ -98,45 +98,83 @@ def canvas_id():
     from random import randint
     return md5(str(randint(1, 100)).encode('utf8')).hexdigest()
 
-def francy_id(s='', type='node', counter=0):
-    return "%s_%s%d" % (s, type, counter)
 
-def basic_id(i):
-    return "F%d" % i
+def francy_id(base_id='', output_type='node', counter=0):
+    r"""
+    Id for Francy outputs.
+
+    Input:
+
+    * base_id -- a string
+    * output_type -- a string
+    * counter -- an integer
+
+    Test:
+
+    >>> francy_id("mycanvas", 'menu', 42)
+    'mycanvas_menu42'
+    >>> len(francy_id(None, None, 42424))
+    42
+    """
+    if not base_id:
+        base_id = canvas_id()
+    if output_type == 'canvas':
+        return base_id
+    return "%s_%s%d" % (base_id, output_type, counter)
+
+
+def default_id(counter):
+    r"""
+    Default id (francy-style) for Francy outputs.
+
+    Test:
+
+    >>> default_id(42)
+    'F42'
+    """
+    return "F%d" % counter
 
 
 class FrancyOutput:
     r"""
     A base class for Francy JSON representable objects having an id as required attribute.
-
-    Input:
-
-    * counter -- an integer
-    * encoder -- a JSON encoder
-
-    Test:
-
-    >>> o = FrancyOutput(3)
-    >>> o.encoder.__class__
-    <class 'json.encoder.JSONEncoder'>
-    >>> o.id
-    'F4'
-    >>> o.to_dict()
-    {'id': 'F4'}
-    >>> o.to_json()
-    '{"id": "F4"}'
     """
 
-    def __init__(self, counter=0, encoder=None):
+    def __init__(self, base_id=None, output_type=None, counter=0, encoder=None):
+        r"""
+        Input:
+
+        * counter -- an integer
+        * encoder -- a JSON encoder
+
+        Test:
+
+        >>> o = FrancyOutput('mycanvas', 'node', 3)
+        >>> o.encoder.__class__
+        <class 'json.encoder.JSONEncoder'>
+        >>> o.id
+        'mycanvas_node4'
+        """
         counter += 1
         self.counter = counter
         if not encoder:
             encoder = JSONEncoder()
         self.encoder = encoder
         self.obj = None
-        self.id = basic_id(counter)
+        if output_type: # Do not give an id to the adapter object
+            self.id = francy_id(base_id, output_type, counter)
 
     def to_dict(self):
+        r"""
+        Strip out unrequired attributes
+        before passing the object to its JSON encoder.
+
+        Test:
+
+        >>> o = FrancyOutput('mycanvas', 'node', 3)
+        >>> o.to_dict()
+        {'id': 'mycanvas_node4'}
+        """
         d = copy(self.__dict__)
         del d['counter']
         del d['encoder']
@@ -158,6 +196,15 @@ class FrancyOutput:
         return d
 
     def to_json(self):
+        r"""
+        JSON serialization.
+
+        Test:
+
+        >>> o = FrancyOutput('mycanvas', 'node', 3)
+        >>> o.to_json()
+        '{"id": "mycanvas_node4"}'
+        """
         return self.encoder.encode(self.to_dict())
 
 
@@ -171,11 +218,11 @@ class FrancyAdapter(FrancyOutput):
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G1 = nx.Graph(e)
     >>> a = FrancyAdapter()
-    >>> a.to_dict(G1, title="Example Undirected Graph")
-    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'F1', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'F2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'F3': {'id': 'F3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F4': {'id': 'F4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F5': {'id': 'F5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F6': {'id': 'F6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'F7': {'source': 'F3', 'weight': 1, 'color': '', 'target': 'F4', 'id': 'F7'}, 'F8': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F5', 'id': 'F8'}, 'F9': {'source': 'F5', 'weight': 1, 'color': '', 'target': 'F6', 'id': 'F9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
+    >>> a.to_dict(G1, title="Example Undirected Graph", base_id="mycanvas")
+    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'mycanvas', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'mycanvas_graph2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'F3': {'id': 'F3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F4': {'id': 'F4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F5': {'id': 'F5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F6': {'id': 'F6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'F7': {'source': 'F3', 'weight': 1, 'color': '', 'target': 'F4', 'id': 'F7'}, 'F8': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F5', 'id': 'F8'}, 'F9': {'source': 'F5', 'weight': 1, 'color': '', 'target': 'F6', 'id': 'F9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
     """
     def __init__(self, version='1.1.3', counter=-1):
-        super(FrancyAdapter, self).__init__(counter=counter)
+        super(FrancyAdapter, self).__init__(None, None, counter)
         self.version = version
         self.mime = "application/vnd.francy+json"
         self.canvas = None
@@ -183,7 +230,7 @@ class FrancyAdapter(FrancyOutput):
     def to_dict(self, obj, **kws):
         canvas_kws = {}
         canvas_kws['title'] = "A Francy graph representation"  # default title
-        for k in ['title', 'width', 'height', 'zoomToFit', 'texTypesetting']:
+        for k in ['title', 'width', 'height', 'zoomToFit', 'texTypesetting', 'base_id']:
             if k in kws:
                 canvas_kws[k] = kws[k]
                 del kws[k]
@@ -198,7 +245,6 @@ class FrancyAdapter(FrancyOutput):
             del kws['messages']
         self.canvas.set_graph(obj, **kws)
         d = super(FrancyAdapter, self).to_dict()
-        del d['id']
         return d
 
     def to_json(self, obj, **kws):
@@ -214,15 +260,17 @@ class FrancyCanvas(FrancyOutput):
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]  # list of edges
     >>> G = nx.Graph(e)
-    >>> FC = FrancyCanvas()
+    >>> FC = FrancyCanvas(base_id='mycanvas')
     >>> FC.set_graph(G)
     >>> FC.to_json()
-    '{"id": "F1", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "F2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"source": "F3", "weight": 1, "color": "", "target": "F4", "id": "F7"}, "F8": {"source": "F4", "weight": 1, "color": "", "target": "F5", "id": "F8"}, "F9": {"source": "F5", "weight": 1, "color": "", "target": "F6", "id": "F9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
+    '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"source": "F3", "weight": 1, "color": "", "target": "F4", "id": "F7"}, "F8": {"source": "F4", "weight": 1, "color": "", "target": "F5", "id": "F8"}, "F9": {"source": "F5", "weight": 1, "color": "", "target": "F6", "id": "F9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
     """
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100,
-                 zoomToFit=True, texTypesetting=False):
-        super(FrancyCanvas, self).__init__(counter, encoder)
-        self.id = canvas_id()
+                 zoomToFit=True, texTypesetting=False, **kws):
+        base_id = None
+        if 'base_id' in kws: # Useful for testing
+            base_id = kws['base_id']
+        super(FrancyCanvas, self).__init__(base_id, 'canvas', counter)
         self.title = title
         self.width = float(width)  # just in case we get them as objects
         self.height = float(height)
@@ -238,8 +286,7 @@ class FrancyCanvas(FrancyOutput):
 
         * graph -- a FrancyGraph object
         """
-        graph_id = francy_id(self.id, 'graph', self.counter)
-        self.graph = FrancyGraph(graph, self.encoder, graphId=graph_id, **kws)
+        self.graph = FrancyGraph(graph, self.id, self.counter, **kws)
 
     def add_menu(self, menu):
         r"""
@@ -261,20 +308,48 @@ class FrancyCanvas(FrancyOutput):
         self.messages[fid] = FrancyMessage(text=text, title=title, msgType=msgType)
 
 
+class FrancyCallback(FrancyOutput):
+    r"""
+    A Callback for a menu entry.
+
+    Test:
+
+    >>> c = FrancyCallback('mycanvas', 1, 'cardinality', knownArgs=["<object>", "{1,2,3}"])
+    >>> c.funcname
+    'cardinality'
+    >>> c.trigger
+    'click'
+    """
+    def __init__(self, canvas_id=None, counter=0, funcname=None, trigger="click", knownArgs=[], requiredArgs={}):
+        r"""
+        Input:
+
+        * counter -- an integer to count callbacks
+        * funcname -- a string
+        * trigger -- a string
+        * knownArgs -- a list of strings
+        * requiredArgs -- a dict
+        """
+        super(FrancyCallback, self).__init__(canvas_id, 'callback', counter)
+        self.funcname = funcname
+        self.trigger = trigger
+        self.knownArgs = knownArgs
+        self.requiredArgs = requiredArgs
+
+
 class FrancyMenu(FrancyOutput):
-    def __init__(self, counter, encoder, title='', callback=None, menus=None,
+    def __init__(self, counter, title='', callback=None, menus=None,
                  messages=None):
         r"""
         Input:
 
-        * counter -- an integer
-        * encoder -- a JSON encoder
+        * counter -- an integer to count menus
         * title -- a string
-        * callback -- a Callback named tuple
-        * menus -- a list of Menu named tuples
-        * messages -- a list of FrancyMessage named tuples
+        * callback -- a FrancyCallback object
+        * menus -- a list of FrancyMenu objects
+        * messages -- a list of FrancyMessage objects
         """
-        super(FrancyMenu, self).__init__(counter, encoder)
+        super(FrancyMenu, self).__init__(canvas_id, 'menu', counter)
         self.title = title
         self.callback = callback
         self.menus = {}
@@ -294,18 +369,16 @@ class FrancyGraph(FrancyOutput):
     >>> import networkx as nx
     >>> e = [(1, 2), (2, 3), (3, 4)]   # list of edges
     >>> G = nx.Graph(e)
-    >>> FG = FrancyGraph(G, 15, JSONEncoder())
+    >>> FG = FrancyGraph(G, 'mycanvas', 15)
     >>> FG.to_json()
-    '{"id": "F16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"source": "F17", "weight": 1, "color": "", "target": "F18", "id": "F21"}, "F22": {"source": "F18", "weight": 1, "color": "", "target": "F19", "id": "F22"}, "F23": {"source": "F19", "weight": 1, "color": "", "target": "F20", "id": "F23"}}, "type": "undirected"}'
+    '{"id": "mycanvas_graph16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"source": "F17", "weight": 1, "color": "", "target": "F18", "id": "F21"}, "F22": {"source": "F18", "weight": 1, "color": "", "target": "F19", "id": "F22"}, "F23": {"source": "F19", "weight": 1, "color": "", "target": "F20", "id": "F23"}}, "type": "undirected"}'
     """
-    def __init__(self, obj, encoder, graphId=None, graphType='undirected',
+    def __init__(self, obj, canvas_id=None, counter=0, graphType='undirected',
                  simulation=True, collapsed=True, drag=False, showNeighbours=False,
                  nodeType='circle', nodeSize=10, color="", highlight=True, weight=1,
                  node_options=None, link_options=None):
-        super(FrancyGraph, self).__init__(counter)
+        super(FrancyGraph, self).__init__(canvas_id, 'graph', counter)
         self.obj = obj
-        if graphId:
-            self.id = graphId
         self.graphType = graphType
         if graphType == "tree":
             self.nodeLayer = 0
@@ -340,7 +413,7 @@ class FrancyGraph(FrancyOutput):
         match = {}
         for n in self.obj.nodes():
             counter += 1
-            ident = basic_id(counter)
+            ident = default_id(counter)
             match[n] = ident
             # Calculate node options
             options = {'title': '', 'parent': ''}
@@ -384,7 +457,7 @@ class FrancyGraph(FrancyOutput):
         self.links = {}
         for (src, tgt) in self.obj.edges():
             counter += 1
-            ident = basic_id(counter)
+            ident = default_id(counter)
             # Calculate node options
             options = {}
             for parm in ['color', 'weight']:
@@ -431,12 +504,12 @@ class FrancyMessage(FrancyOutput):
 
     Examples:
 
-    >>> m = FrancyMessage(text="There are 8 levels in this Group.")
+    >>> m = FrancyMessage("mycanvas", text="There are 8 levels in this Group.")
     >>> m.to_json()
-    '{"id": "F1", "type": "default", "title": "", "text": "There are 8 levels in this Group."}'
+    '{"id": "mycanvas_message1", "type": "default", "title": "", "text": "There are 8 levels in this Group."}'
     """
-    def __init__(self, counter=0, encoder=None, msgType="default", title="", text=""):
-        super(FrancyMessage, self).__init__(counter)
+    def __init__(self, canvas_id=None, counter=0, msgType="default", title="", text=""):
+        super(FrancyMessage, self).__init__(canvas_id, 'message', counter)
         self.type = msgType
         self.title = title
         self.text = text
