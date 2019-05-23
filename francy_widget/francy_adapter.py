@@ -219,7 +219,7 @@ class FrancyAdapter(FrancyOutput):
     >>> G1 = nx.Graph(e)
     >>> a = FrancyAdapter()
     >>> a.to_dict(G1, title="Example Undirected Graph", base_id="mycanvas")
-    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'mycanvas', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'mycanvas_graph2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'F3': {'id': 'F3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F4': {'id': 'F4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F5': {'id': 'F5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'F6': {'id': 'F6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'F7': {'source': 'F3', 'weight': 1, 'color': '', 'target': 'F4', 'id': 'F7'}, 'F8': {'source': 'F4', 'weight': 1, 'color': '', 'target': 'F5', 'id': 'F8'}, 'F9': {'source': 'F5', 'weight': 1, 'color': '', 'target': 'F6', 'id': 'F9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
+    {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'mycanvas', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'mycanvas_graph2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'mycanvas_node3': {'id': 'mycanvas_node3', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node4': {'id': 'mycanvas_node4', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node5': {'id': 'mycanvas_node5', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node6': {'id': 'mycanvas_node6', 'x': 0, 'y': 0, 'type': 'circle', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {}, 'messages': {}, 'callbacks': {}}}, 'links': {'mycanvas_edge7': {'source': 'mycanvas_node3', 'weight': 1, 'color': '', 'target': 'mycanvas_node4', 'id': 'mycanvas_edge7'}, 'mycanvas_edge8': {'source': 'mycanvas_node4', 'weight': 1, 'color': '', 'target': 'mycanvas_node5', 'id': 'mycanvas_edge8'}, 'mycanvas_edge9': {'source': 'mycanvas_node5', 'weight': 1, 'color': '', 'target': 'mycanvas_node6', 'id': 'mycanvas_edge9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
     """
     def __init__(self, version='1.1.3', counter=-1):
         super(FrancyAdapter, self).__init__(None, None, counter)
@@ -263,7 +263,7 @@ class FrancyCanvas(FrancyOutput):
     >>> FC = FrancyCanvas(base_id='mycanvas')
     >>> FC.set_graph(G)
     >>> FC.to_json()
-    '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F3": {"id": "F3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F4": {"id": "F4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F5": {"id": "F5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F6": {"id": "F6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F7": {"source": "F3", "weight": 1, "color": "", "target": "F4", "id": "F7"}, "F8": {"source": "F4", "weight": 1, "color": "", "target": "F5", "id": "F8"}, "F9": {"source": "F5", "weight": 1, "color": "", "target": "F6", "id": "F9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
+    '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
     """
     def __init__(self, counter=0, encoder=None, title="My Canvas", width=800, height=100,
                  zoomToFit=True, texTypesetting=False, **kws):
@@ -371,13 +371,14 @@ class FrancyGraph(FrancyOutput):
     >>> G = nx.Graph(e)
     >>> FG = FrancyGraph(G, 'mycanvas', 15)
     >>> FG.to_json()
-    '{"id": "mycanvas_graph16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"F17": {"id": "F17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F18": {"id": "F18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F19": {"id": "F19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "F20": {"id": "F20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"F21": {"source": "F17", "weight": 1, "color": "", "target": "F18", "id": "F21"}, "F22": {"source": "F18", "weight": 1, "color": "", "target": "F19", "id": "F22"}, "F23": {"source": "F19", "weight": 1, "color": "", "target": "F20", "id": "F23"}}, "type": "undirected"}'
+    '{"id": "mycanvas_graph16", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node17": {"id": "mycanvas_node17", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 17, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node18": {"id": "mycanvas_node18", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 18, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node19": {"id": "mycanvas_node19", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 19, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node20": {"id": "mycanvas_node20", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 20, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge21": {"source": "mycanvas_node17", "weight": 1, "color": "", "target": "mycanvas_node18", "id": "mycanvas_edge21"}, "mycanvas_edge22": {"source": "mycanvas_node18", "weight": 1, "color": "", "target": "mycanvas_node19", "id": "mycanvas_edge22"}, "mycanvas_edge23": {"source": "mycanvas_node19", "weight": 1, "color": "", "target": "mycanvas_node20", "id": "mycanvas_edge23"}}, "type": "undirected"}'
     """
     def __init__(self, obj, canvas_id=None, counter=0, graphType='undirected',
                  simulation=True, collapsed=True, drag=False, showNeighbours=False,
                  nodeType='circle', nodeSize=10, color="", highlight=True, weight=1,
                  node_options=None, link_options=None):
         super(FrancyGraph, self).__init__(canvas_id, 'graph', counter)
+        self.canvas_id = canvas_id
         self.obj = obj
         self.graphType = graphType
         if graphType == "tree":
@@ -413,7 +414,7 @@ class FrancyGraph(FrancyOutput):
         match = {}
         for n in self.obj.nodes():
             counter += 1
-            ident = default_id(counter)
+            ident = francy_id(self.canvas_id, 'node', counter)
             match[n] = ident
             # Calculate node options
             options = {'title': '', 'parent': ''}
@@ -457,7 +458,7 @@ class FrancyGraph(FrancyOutput):
         self.links = {}
         for (src, tgt) in self.obj.edges():
             counter += 1
-            ident = default_id(counter)
+            ident = francy_id(self.canvas_id, 'edge', counter)
             # Calculate node options
             options = {}
             for parm in ['color', 'weight']:
@@ -492,7 +493,7 @@ class FrancyGraph(FrancyOutput):
             res['type'] = res['graphType']
             del res['graphType']
         for optname in [
-                'nodeType', 'nodeLayer', 'nodeSize', 'color', 'highlight', 'weight']:
+                'nodeType', 'nodeLayer', 'nodeSize', 'color', 'highlight', 'weight', 'canvas_id']:
             if optname in res:
                 del res[optname]
         return res
