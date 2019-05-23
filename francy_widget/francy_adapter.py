@@ -178,11 +178,11 @@ class FrancyOutput:
         d = copy(self.__dict__)
         del d['counter']
         del d['encoder']
-        for k in ['obj', 'conjugate', 'node_options', 'link_options']:
+        for k in ['obj', 'conjugate', 'node_options', 'link_options', 'is_method']:
             if k in d:
                 # A math value or a function
                 del d[k]
-        for k in ['canvas', 'graph']:
+        for k in ['canvas', 'graph', 'callback']:
             if k in d and not isinstance(d[k], dict):
                 d[k] = d[k].to_dict()
         for k in ['menus', 'messages']:
@@ -319,11 +319,16 @@ class FrancyCallback(FrancyOutput):
     'cardinality'
     >>> c.trigger
     'click'
+    >>> c.to_json()
+    '{"id": "mycanvas_callback2", "funcname": "cardinality", "trigger": "click", "knownArgs": ["<object>", "{1,2,3}"], "requiredArgs": {}}'
     """
-    def __init__(self, canvas_id=None, counter=0, funcname=None, trigger="click", knownArgs=[], requiredArgs={}):
+    def __init__(self, canvas_id=None, counter=0, funcname=None, is_method=False, trigger="click", knownArgs=[], requiredArgs={}):
         r"""
         Input:
 
+        * canvas_id -- a string
+        * funcname -- a string
+        * is_method -- a boolean
         * counter -- an integer to count callbacks
         * funcname -- a string
         * trigger -- a string
@@ -332,22 +337,31 @@ class FrancyCallback(FrancyOutput):
         """
         super(FrancyCallback, self).__init__(canvas_id, 'callback', counter)
         self.funcname = funcname
+        self.is_method = is_method
         self.trigger = trigger
         self.knownArgs = knownArgs
         self.requiredArgs = requiredArgs
 
 
 class FrancyMenu(FrancyOutput):
-    def __init__(self, counter, title='', callback=None, menus=None,
-                 messages=None):
+    def __init__(self, canvas_id=None, counter=0, title='', callback=None, menus=[],
+                 messages=[]):
         r"""
         Input:
 
+        * canvas_id -- a string
         * counter -- an integer to count menus
         * title -- a string
         * callback -- a FrancyCallback object
         * menus -- a list of FrancyMenu objects
         * messages -- a list of FrancyMessage objects
+
+        Test:
+
+        >>> c = FrancyCallback('mycanvas', 1, 'cardinality', knownArgs=["<object>", "{1,2,3}"])
+        >>> m = FrancyMenu('mycanvas', 1, 'cardinality', c)
+        >>> m.to_json()
+        '{"id": "mycanvas_menu2", "title": "cardinality", "callback": {"id": "mycanvas_callback2", "funcname": "cardinality", "trigger": "click", "knownArgs": ["<object>", "{1,2,3}"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
         """
         super(FrancyMenu, self).__init__(canvas_id, 'menu', counter)
         self.title = title
@@ -358,6 +372,54 @@ class FrancyMenu(FrancyOutput):
         self.messages = {}
         for msg in messages:
             self.messages[msg.id] = msg
+
+    @classmethod
+    def from_dict(cls, data):
+        r"""
+        Create a Francy menu
+
+        Input:
+
+        * data : a dictionary of all menu and associated callback attributes
+
+        Test:
+
+        >>> m = FrancyMenu.from_dict({'canvas_id':'mycanvas', 'title': 'My function call'})
+        >>> m.to_json()
+        '{"id": "mycanvas_menu1", "title": "My function call", "callback": {"id": "mycanvas_callback1", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        """
+        try:
+            canvas_id = data['canvas_id']
+        except:
+            raise KeyError("Missing canvas id!")
+        try:
+            title = data['title']
+        except:
+            raise KeyError("Missing Title")
+        if 'counter' in data:
+            counter = data['counter']
+        else:
+            counter = 0
+        if 'funcname' in data:
+            funcname = data["funcname"]
+        else:
+            funcname = "Unknown"
+        if 'is_method' in data:
+            is_method = data['is_method']
+        else:
+            is_method = False
+        if 'known_args' in data:
+            known_args = data['known_args']
+        else:
+            known_args = []
+        if 'required_args' in data:
+            required_args = data['required_args']
+        else:
+            required_args = {}
+        return cls(canvas_id, counter, title=title, callback=FrancyCallback(
+            canvas_id, counter, funcname=funcname, is_method=is_method, knownArgs=known_args,
+            requiredArgs=required_args)
+        )
 
 
 class FrancyGraph(FrancyOutput):
@@ -418,6 +480,8 @@ class FrancyGraph(FrancyOutput):
             match[n] = ident
             # Calculate node options
             options = {'title': '', 'parent': ''}
+            menus = None
+            messages = None
             # Node parent (for trees only)
             if self.graphType == 'tree' and hasattr(n, 'parent') and n.parent():
                 options['parent'] = n.parent()
@@ -443,6 +507,11 @@ class FrancyGraph(FrancyOutput):
                     if node_specifics['type'] not in FRANCY_NODE_TYPES:
                         raise TypeError(
                             "Node type must be one of: %s" % ', '.join(FRANCY_NODE_TYPES))
+                if 'modal_menus' in node_specifics:
+                    menus = [
+                        FrancyMenu.from_dict(canvas_id=self.canvas_id, counter=counter, data=m) \
+                        for m in node_specifics['modal_menus']
+                    ]
                 options.update(node_specifics)
             if 'title' not in options or not options['title']:
                 options['title'] = str(n)
