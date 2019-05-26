@@ -10,17 +10,36 @@ AUTHORS ::
 from ipywidgets import register
 from ipywidgets.widgets.widget_string import Text
 from traitlets import Any
-from .francy_adapter import FrancyAdapter
-
+try:
+    from .francy_adapter import FrancyAdapter
+except:
+    from francy_adapter import FrancyAdapter # for doctesting
 
 @register
 class FrancyWidget(Text):
-    """Francy widget."""
+    r"""
+    Francy widget.
+
+    Test:
+
+    >>> from networkx import Graph
+    >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+    >>> w = FrancyWidget(G)
+    """
     value = Any()  # should be a networkx graph
     adapter = FrancyAdapter()
 
-    def __init__(self, obj, title="", counter=-1, menus=[], messages=[],
+    def __init__(self, obj=None, title="", counter=-1, menus=[], messages=[],
                  node_options=None, link_options=None, **kws):
+        r"""
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> w = FrancyWidget(G)
+        >>> w.value.__class__
+        <class 'networkx.classes.graph.Graph'>
+        """
         self.value = obj
         self.title = title
         if counter > -1:
@@ -59,11 +78,21 @@ class FrancyWidget(Text):
     def set_value(self, obj):
         r"""
         Check compatibility, then set editor value.
+
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> w = FrancyWidget()
+        >>> w.set_value(G)
+        >>> len(w.canvas_id)
+        32
         """
-        if not self.validate(obj, self.value.__class__):
+        if self.value and not self.validate(obj, self.value.__class__):
             raise ValueError("Object %s is not compatible." % str(obj))
         self.value = obj
         self.make_json()
+        self.canvas_id = self.adapter.canvas.id
 
     def make_json(self):
         if self.test_json:
@@ -87,6 +116,7 @@ class FrancyWidget(Text):
                 plaintext = plaintext[:110] + '…'
             if not self.json_data:
                 self.make_json()
+                self.canvas_id = self.adapter.canvas.id
             # The 'application/vnd.francy+json' mimetype has not been registered yet.
             # See the registration process and naming convention at
             # http://tools.ietf.org/html/rfc6838
