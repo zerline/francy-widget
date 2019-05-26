@@ -374,7 +374,7 @@ class FrancyMenu(FrancyOutput):
             self.messages[msg.id] = msg
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, canvas_id='', counter=0, data={}):
         r"""
         Create a Francy menu
 
@@ -384,22 +384,14 @@ class FrancyMenu(FrancyOutput):
 
         Test:
 
-        >>> m = FrancyMenu.from_dict({'canvas_id':'mycanvas', 'title': 'My function call'})
+        >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
         >>> m.to_json()
-        '{"id": "mycanvas_menu1", "title": "My function call", "callback": {"id": "mycanvas_callback1", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}'
         """
-        try:
-            canvas_id = data['canvas_id']
-        except:
-            raise KeyError("Missing canvas id!")
         try:
             title = data['title']
         except:
             raise KeyError("Missing Title")
-        if 'counter' in data:
-            counter = data['counter']
-        else:
-            counter = 0
         if 'funcname' in data:
             funcname = data["funcname"]
         else:
@@ -464,6 +456,27 @@ class FrancyGraph(FrancyOutput):
         self.compute()
 
     def compute(self):
+        r"""
+        Build graph nodes and edges.
+
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> def node_options(n):
+        ...   options = {}
+        ...   options['type'] = 'diamond'
+        ...   options['modal_menus'] = [{
+        ...     'title': 'cardinality',
+        ...     'funcname': 'cardinality',
+        ...     'is_method': True
+        ...   }]
+        ...   return options
+        >>> g = FrancyGraph(G, canvas_id='mycanvas', node_options=node_options)
+        >>> g.compute()
+        >>> g.to_json()
+        '{"id": "mycanvas_graph1", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node2": {"id": "mycanvas_node2", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {"mycanvas_menu3": {"id": "mycanvas_menu3", "title": "cardinality", "callback": {"id": "mycanvas_callback3", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge6": {"source": "mycanvas_node2", "weight": 1, "color": "", "target": "mycanvas_node3", "id": "mycanvas_edge6"}, "mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}}, "type": "undirected"}'
+        """
         counter = self.counter
         if not self.graphType:
             if self.obj.is_directed():
@@ -508,10 +521,12 @@ class FrancyGraph(FrancyOutput):
                         raise TypeError(
                             "Node type must be one of: %s" % ', '.join(FRANCY_NODE_TYPES))
                 if 'modal_menus' in node_specifics:
-                    menus = [
-                        FrancyMenu.from_dict(canvas_id=self.canvas_id, counter=counter, data=m) \
-                        for m in node_specifics['modal_menus']
-                    ]
+                    menus = {}
+                    for m in node_specifics['modal_menus']:
+                        men = FrancyMenu.from_dict(self.canvas_id, counter, data=m)
+                        menus[men.id] = men.to_dict()
+                    options['menus'] = menus
+                    del node_specifics['modal_menus']
                 options.update(node_specifics)
             if 'title' not in options or not options['title']:
                 options['title'] = str(n)
