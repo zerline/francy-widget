@@ -95,6 +95,27 @@ class FrancyWidget(Text):
         self.canvas_id = self.adapter.canvas.id
 
     def make_json(self):
+        r"""
+        Make JSON output for the display.
+
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> def node_options(n):
+        ...   options = {}
+        ...   options['type'] = 'square'
+        ...   options['modal_menus'] = [{
+        ...     'title': 'cardinality',
+        ...     'funcname': 'cardinality',
+        ...     'is_method': True
+        ...   }]
+        ...   return options
+        >>> w = FrancyWidget(G, base_id='mycanvas', title="A small, but rich graph", node_options=node_options)
+        >>> w.make_json()
+        >>> w.json_data
+        '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "mycanvas", "title": "A small, but rich graph", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "square", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "square", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "square", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {"mycanvas_menu7": {"id": "mycanvas_menu7", "title": "cardinality", "callback": {"id": "mycanvas_callback7", "funcname": "cardinality", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}}'
+        """
         if self.test_json:
             self.json_data = self.value
         else:
