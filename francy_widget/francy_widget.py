@@ -92,7 +92,6 @@ class FrancyWidget(Text):
             raise ValueError("Object %s is not compatible." % str(obj))
         self.value = obj
         self.make_json()
-        self.canvas_id = self.adapter.canvas.id
 
     def make_json(self):
         r"""
@@ -137,7 +136,6 @@ class FrancyWidget(Text):
                 plaintext = plaintext[:110] + '…'
             if not self.json_data:
                 self.make_json()
-                self.canvas_id = self.adapter.canvas.id
             # The 'application/vnd.francy+json' mimetype has not been registered yet.
             # See the registration process and naming convention at
             # http://tools.ietf.org/html/rfc6838
