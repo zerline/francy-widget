@@ -183,8 +183,11 @@ class FrancyOutput:
                 # A math value or a function
                 del d[k]
         for k in ['canvas', 'graph', 'callback']:
-            if k in d and d[k] and not isinstance(d[k], dict):
-                d[k] = d[k].to_dict()
+            if k in d:
+                if not d[k]:
+                    d[k] = {}
+                elif not isinstance(d[k], dict):
+                    d[k] = d[k].to_dict()
         for k in ['menus', 'messages']:
             if k in d:
                 if not isinstance(d[k], dict):
@@ -360,7 +363,7 @@ class FrancyCanvas(FrancyOutput):
         >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
         >>> FC.add_menu(m)
         >>> FC.to_json()
-        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": null, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}'
+        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {}, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}'
         """
         self.menus[menu.id] = menu
 
@@ -438,7 +441,7 @@ class FrancyMenu(FrancyOutput):
         '{"id": "mycanvas_menu4", "title": "All Subgroups", "callback": {"id": "mycanvas_callback3", "funcname": null, "trigger": "click", "knownArgs": ["python", "SymmetricGroup(4)"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
         >>> m2 = FrancyMenu('mycanvas', 4, 'Subgroup Lattice')
         >>> m2.to_json()
-        '{"id": "mycanvas_menu5", "title": "Subgroup Lattice", "callback": null, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas_menu5", "title": "Subgroup Lattice", "callback": {}, "menus": {}, "messages": {}}'
         """
         super(FrancyMenu, self).__init__(canvas_id, 'menu', counter)
         self.title = title
