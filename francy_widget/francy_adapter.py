@@ -482,10 +482,14 @@ class FrancyMenu(FrancyOutput):
             is_method = False
         if 'known_args' in data:
             known_args = data['known_args']
+        elif 'knownArgs' in data:
+            known_args = data['knownArgs']
         else:
             known_args = []
         if 'required_args' in data:
             required_args = data['required_args']
+        elif 'requiredArgs' in data:
+            required_args = data['requiredArgs']
         else:
             required_args = {}
         return cls(canvas_id, counter, title=title, callback=FrancyCallback(
