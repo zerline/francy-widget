@@ -25,6 +25,8 @@ class FrancyWidget(Text):
     >>> from networkx import Graph
     >>> G = Graph([(1, 2), (2, 3), (3, 4)])
     >>> w = FrancyWidget(G)
+    >>> w.adapter.canvas.id='mycanvas'
+    >>> w.json_data
     """
     value = Any()  # should be a networkx graph
     adapter = FrancyAdapter()
@@ -92,6 +94,8 @@ class FrancyWidget(Text):
             raise ValueError("Object %s is not compatible." % str(obj))
         self.value = obj
         self.make_json()
+        if not self.test_json:
+            self.canvas_id = self.adapter.canvas.id
 
     def make_json(self):
         r"""
