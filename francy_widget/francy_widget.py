@@ -25,8 +25,9 @@ class FrancyWidget(Text):
     >>> from networkx import Graph
     >>> G = Graph([(1, 2), (2, 3), (3, 4)])
     >>> w = FrancyWidget(G)
-    >>> w.adapter.canvas.id='mycanvas'
-    >>> w.json_data
+    >>> w.make_json()
+    >>> len(w.adapter.canvas.graph.nodes)
+    4
     """
     value = Any()  # should be a networkx graph
     adapter = FrancyAdapter()
