@@ -183,7 +183,7 @@ class FrancyOutput:
                 # A math value or a function
                 del d[k]
         for k in ['canvas', 'graph', 'callback']:
-            if k in d and not isinstance(d[k], dict):
+            if k in d and d[k] and not isinstance(d[k], dict):
                 d[k] = d[k].to_dict()
         for k in ['menus', 'messages']:
             if k in d:
@@ -225,7 +225,7 @@ class FrancyAdapter(FrancyOutput):
         super(FrancyAdapter, self).__init__(None, None, counter)
         self.version = version
         self.mime = "application/vnd.francy+json"
-        self.canvas = None
+        self.canvas = FrancyCanvas()
 
     def to_dict(self, obj, **kws):
         r"""
@@ -262,7 +262,8 @@ class FrancyAdapter(FrancyOutput):
             for msg in kws['messages']:
                 self.canvas.add_message(msg)
             del kws['messages']
-        self.canvas.set_graph(obj, **kws)
+        if obj:
+            self.canvas.set_graph(obj, **kws)
         d = super(FrancyAdapter, self).to_dict()
         return d
 
@@ -349,8 +350,16 @@ class FrancyCanvas(FrancyOutput):
         Input:
 
         * menu -- a FrancyMenu object
+
+        Test:
+
+        >>> FC = FrancyCanvas(base_id='mycanvas')
+        >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
+        >>> FC.add_menu(m)
+        >>> FC.to_json()
+        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": null, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}'
         """
-        raise NotImplementedError
+        self.menus[menu.id] = menu
 
     def add_message(self, text, msgType="default", title=""):
         r"""
@@ -420,6 +429,13 @@ class FrancyMenu(FrancyOutput):
         >>> m = FrancyMenu('mycanvas', 1, 'cardinality', c)
         >>> m.to_json()
         '{"id": "mycanvas_menu2", "title": "cardinality", "callback": {"id": "mycanvas_callback2", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>", "{1,2,3}"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        >>> c1 = FrancyCallback('mycanvas', 2, None, knownArgs=["SymmetricGroup(4)"])
+        >>> m1 = FrancyMenu('mycanvas', 3, 'All Subgroups', c1)
+        >>> m1.to_json()
+        '{"id": "mycanvas_menu4", "title": "All Subgroups", "callback": {"id": "mycanvas_callback3", "funcname": null, "trigger": "click", "knownArgs": ["python", "SymmetricGroup(4)"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        >>> m2 = FrancyMenu('mycanvas', 4, 'Subgroup Lattice')
+        >>> m2.to_json()
+        '{"id": "mycanvas_menu5", "title": "Subgroup Lattice", "callback": null, "menus": {}, "messages": {}}'
         """
         super(FrancyMenu, self).__init__(canvas_id, 'menu', counter)
         self.title = title
