@@ -244,11 +244,11 @@ class FrancyAdapter(FrancyOutput):
         ...   options['modal_menus'] = [{
         ...     'title': 'cardinality',
         ...     'funcname': 'cardinality',
-        ...     'is_method': True
+        ...     'funcscope': 'object'
         ...   }]
         ...   return options
         >>> a.to_dict(G1, base_id='mycanvas', title="Example Undirected Graph", node_options=node_options)
-        {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'mycanvas', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'mycanvas_graph2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'mycanvas_node3': {'id': 'mycanvas_node3', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {'mycanvas_menu4': {'id': 'mycanvas_menu4', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback4', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['python', '<object>'], 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node4': {'id': 'mycanvas_node4', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {'mycanvas_menu5': {'id': 'mycanvas_menu5', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback5', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['python', '<object>'], 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node5': {'id': 'mycanvas_node5', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {'mycanvas_menu6': {'id': 'mycanvas_menu6', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback6', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['python', '<object>'], 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node6': {'id': 'mycanvas_node6', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {'mycanvas_menu7': {'id': 'mycanvas_menu7', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback7', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['python', '<object>'], 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}}, 'links': {'mycanvas_edge7': {'source': 'mycanvas_node3', 'weight': 1, 'color': '', 'target': 'mycanvas_node4', 'id': 'mycanvas_edge7'}, 'mycanvas_edge8': {'source': 'mycanvas_node4', 'weight': 1, 'color': '', 'target': 'mycanvas_node5', 'id': 'mycanvas_edge8'}, 'mycanvas_edge9': {'source': 'mycanvas_node5', 'weight': 1, 'color': '', 'target': 'mycanvas_node6', 'id': 'mycanvas_edge9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
+        {'version': '1.1.3', 'mime': 'application/vnd.francy+json', 'canvas': {'id': 'mycanvas', 'title': 'Example Undirected Graph', 'width': 800.0, 'height': 100.0, 'zoomToFit': True, 'texTypesetting': False, 'graph': {'id': 'mycanvas_graph2', 'simulation': True, 'collapsed': True, 'drag': False, 'showNeighbours': False, 'nodes': {'mycanvas_node3': {'id': 'mycanvas_node3', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '1', 'color': '', 'highlight': True, 'layer': 3, 'parent': '', 'menus': {'mycanvas_menu4': {'id': 'mycanvas_menu4', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback4', 'language': 'python', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['1'], 'funcscope': 'object', 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node4': {'id': 'mycanvas_node4', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '2', 'color': '', 'highlight': True, 'layer': 4, 'parent': '', 'menus': {'mycanvas_menu5': {'id': 'mycanvas_menu5', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback5', 'language': 'python', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['2'], 'funcscope': 'object', 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node5': {'id': 'mycanvas_node5', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '3', 'color': '', 'highlight': True, 'layer': 5, 'parent': '', 'menus': {'mycanvas_menu6': {'id': 'mycanvas_menu6', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback6', 'language': 'python', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['3'], 'funcscope': 'object', 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}, 'mycanvas_node6': {'id': 'mycanvas_node6', 'x': 0, 'y': 0, 'type': 'square', 'size': 10, 'title': '4', 'color': '', 'highlight': True, 'layer': 6, 'parent': '', 'menus': {'mycanvas_menu7': {'id': 'mycanvas_menu7', 'title': 'cardinality', 'callback': {'id': 'mycanvas_callback7', 'language': 'python', 'funcname': 'cardinality', 'trigger': 'click', 'knownArgs': ['4'], 'funcscope': 'object', 'requiredArgs': {}}, 'menus': {}, 'messages': {}}}, 'messages': {}, 'callbacks': {}}}, 'links': {'mycanvas_edge7': {'source': 'mycanvas_node3', 'weight': 1, 'color': '', 'target': 'mycanvas_node4', 'id': 'mycanvas_edge7'}, 'mycanvas_edge8': {'source': 'mycanvas_node4', 'weight': 1, 'color': '', 'target': 'mycanvas_node5', 'id': 'mycanvas_edge8'}, 'mycanvas_edge9': {'source': 'mycanvas_node5', 'weight': 1, 'color': '', 'target': 'mycanvas_node6', 'id': 'mycanvas_edge9'}}, 'type': 'undirected'}, 'menus': {}, 'messages': {}}}
         """
         canvas_kws = {}
         canvas_kws['title'] = "A Francy graph representation"  # default title
@@ -280,18 +280,18 @@ class FrancyAdapter(FrancyOutput):
         >>> a = FrancyAdapter()
         >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
         >>> a.to_json(G1, base_id='mycanvas', title="With menu", menus=[m])
-        '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "mycanvas", "title": "With menu", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}}'
+        '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "mycanvas", "title": "With menu", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "circle", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "language": "python", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}}'
         >>> def node_options(n):
         ...   options = {}
         ...   options['type'] = 'square'
         ...   options['modal_menus'] = [{
         ...     'title': 'cardinality',
         ...     'funcname': 'cardinality',
-        ...     'is_method': True
+        ...     'funcscope': 'object'
         ...   }]
         ...   return options
         >>> a.to_json(G1, base_id='mycanvas', title="Example Undirected Graph", node_options=node_options)
-        '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "mycanvas", "title": "Example Undirected Graph", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "square", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "square", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "square", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {"mycanvas_menu7": {"id": "mycanvas_menu7", "title": "cardinality", "callback": {"id": "mycanvas_callback7", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}}'
+        '{"version": "1.1.3", "mime": "application/vnd.francy+json", "canvas": {"id": "mycanvas", "title": "Example Undirected Graph", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["1"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "square", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["2"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "square", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["3"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "square", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {"mycanvas_menu7": {"id": "mycanvas_menu7", "title": "cardinality", "callback": {"id": "mycanvas_callback7", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["4"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}}'
         """
         return self.encoder.encode(self.to_dict(obj, **kws))
 
@@ -341,13 +341,13 @@ class FrancyCanvas(FrancyOutput):
         ...   options['modal_menus'] = [{
         ...     'title': 'cardinality',
         ...     'funcname': 'cardinality',
-        ...     'is_method': True
+        ...     'funcscope': 'object'
         ...   }]
         ...   return options
         >>> FC = FrancyCanvas(base_id='mycanvas')
         >>> FC.set_graph(G, node_options=node_options)
         >>> FC.to_json()
-        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "square", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "square", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "square", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {"mycanvas_menu7": {"id": "mycanvas_menu7", "title": "cardinality", "callback": {"id": "mycanvas_callback7", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {"id": "mycanvas_graph2", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "square", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["1"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "square", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["2"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "square", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["3"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node6": {"id": "mycanvas_node6", "x": 0, "y": 0, "type": "square", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 6, "parent": "", "menus": {"mycanvas_menu7": {"id": "mycanvas_menu7", "title": "cardinality", "callback": {"id": "mycanvas_callback7", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["4"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}, "mycanvas_edge9": {"source": "mycanvas_node5", "weight": 1, "color": "", "target": "mycanvas_node6", "id": "mycanvas_edge9"}}, "type": "undirected"}, "menus": {}, "messages": {}}'
         """
         self.graph = FrancyGraph(graph, self.id, self.counter, **kws)
 
@@ -363,7 +363,7 @@ class FrancyCanvas(FrancyOutput):
         >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
         >>> FC.add_menu(m)
         >>> FC.to_json()
-        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {}, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}'
+        '{"id": "mycanvas", "title": "My Canvas", "width": 800.0, "height": 100.0, "zoomToFit": true, "texTypesetting": false, "graph": {}, "menus": {"mycanvas_menu2": {"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "language": "python", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}}'
         """
         self.menus[menu.id] = menu
 
@@ -385,21 +385,21 @@ class FrancyCallback(FrancyOutput):
 
     Test:
 
-    >>> c = FrancyCallback('mycanvas', 1, 'cardinality', is_method=True, knownArgs=["{1,2,3}"])
+    >>> c = FrancyCallback('mycanvas', 1, 'cardinality', funcscope='object', object="{1,2,3}")
     >>> c.funcname
     'cardinality'
     >>> c.trigger
     'click'
     >>> c.to_json()
-    '{"id": "mycanvas_callback2", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>", "{1,2,3}"], "requiredArgs": {}}'
+    '{"id": "mycanvas_callback2", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["{1,2,3}"], "funcscope": "object", "requiredArgs": {}}'
     """
-    def __init__(self, canvas_id=None, counter=0, funcname=None, is_method=False, trigger="click", knownArgs=[], requiredArgs={}):
+    def __init__(self, canvas_id=None, counter=0, funcname=None, funcscope=None, object=None, trigger="click", knownArgs=[], requiredArgs={}):
         r"""
         Input:
 
         * canvas_id -- a string
         * funcname -- a string
-        * is_method -- a boolean
+        * funcscope -- a string ('object'/'class'/None)
         * counter -- an integer to count callbacks
         * funcname -- a string
         * trigger -- a string
@@ -407,13 +407,21 @@ class FrancyCallback(FrancyOutput):
         * requiredArgs -- a dict
         """
         super(FrancyCallback, self).__init__(canvas_id, 'callback', counter)
+        self.language = 'python'
         self.funcname = funcname
         self.trigger = trigger
-        if is_method:
-            self.knownArgs = ['python', '<object>'] +  knownArgs
-        else:
-            self.knownArgs = ['python'] +  knownArgs
+        self.knownArgs = []
+        if funcscope:
+            self.funcscope = funcscope
+            if object:
+                self.knownArgs.append(object)
+        self.knownArgs += knownArgs
         self.requiredArgs = requiredArgs
+
+    def to_dict(self, obj=None, **kws):
+        res = super(FrancyCallback, self).to_dict()
+        res['language'] = 'python'
+        return res
 
 
 class FrancyMenu(FrancyOutput):
@@ -431,14 +439,14 @@ class FrancyMenu(FrancyOutput):
 
         Test:
 
-        >>> c = FrancyCallback('mycanvas', 1, 'cardinality', is_method=True, knownArgs=["{1,2,3}"])
+        >>> c = FrancyCallback('mycanvas', 1, 'cardinality', funcscope='object', object="{1,2,3}")
         >>> m = FrancyMenu('mycanvas', 1, 'cardinality', c)
         >>> m.to_json()
-        '{"id": "mycanvas_menu2", "title": "cardinality", "callback": {"id": "mycanvas_callback2", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>", "{1,2,3}"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas_menu2", "title": "cardinality", "callback": {"id": "mycanvas_callback2", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["{1,2,3}"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}'
         >>> c1 = FrancyCallback('mycanvas', 2, None, knownArgs=["SymmetricGroup(4)"])
         >>> m1 = FrancyMenu('mycanvas', 3, 'All Subgroups', c1)
         >>> m1.to_json()
-        '{"id": "mycanvas_menu4", "title": "All Subgroups", "callback": {"id": "mycanvas_callback3", "funcname": null, "trigger": "click", "knownArgs": ["python", "SymmetricGroup(4)"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas_menu4", "title": "All Subgroups", "callback": {"id": "mycanvas_callback3", "language": "python", "funcname": null, "trigger": "click", "knownArgs": ["SymmetricGroup(4)"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
         >>> m2 = FrancyMenu('mycanvas', 4, 'Subgroup Lattice')
         >>> m2.to_json()
         '{"id": "mycanvas_menu5", "title": "Subgroup Lattice", "callback": {}, "menus": {}, "messages": {}}'
@@ -466,7 +474,7 @@ class FrancyMenu(FrancyOutput):
 
         >>> m = FrancyMenu.from_dict('mycanvas', 1, {'title': 'My function call'})
         >>> m.to_json()
-        '{"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "funcname": "Unknown", "trigger": "click", "knownArgs": ["python"], "requiredArgs": {}}, "menus": {}, "messages": {}}'
+        '{"id": "mycanvas_menu2", "title": "My function call", "callback": {"id": "mycanvas_callback2", "language": "python", "funcname": "Unknown", "trigger": "click", "knownArgs": [], "requiredArgs": {}}, "menus": {}, "messages": {}}'
         """
         try:
             title = data['title']
@@ -476,24 +484,27 @@ class FrancyMenu(FrancyOutput):
             funcname = data["funcname"]
         else:
             funcname = "Unknown"
-        if 'is_method' in data:
-            is_method = data['is_method']
+        known_args = []
+        if 'object' in data:
+            known_args.append(str(data["object"]))
+        elif 'class' in data:
+            known_args.append(str(data["class"]))
+        if 'funcscope' in data:
+            funcscope = data['funcscope']  # either 'object' or 'class'
         else:
-            is_method = False
+            funcscope = None
         if 'known_args' in data:
-            known_args = data['known_args']
-        elif 'knownArgs' in data:
-            known_args = data['knownArgs']
-        else:
-            known_args = []
+            known_args += data['known_args']
+        elif 'knownArgs' in data:  # need to adapt to various language habits
+            known_args += data['knownArgs']
         if 'required_args' in data:
             required_args = data['required_args']
-        elif 'requiredArgs' in data:
+        elif 'requiredArgs' in data:  # need to adapt to various language habits
             required_args = data['requiredArgs']
         else:
             required_args = {}
         return cls(canvas_id, counter, title=title, callback=FrancyCallback(
-            canvas_id, counter, funcname=funcname, is_method=is_method, knownArgs=known_args,
+            canvas_id, counter, funcname=funcname, funcscope=funcscope, knownArgs=known_args,
             requiredArgs=required_args)
         )
 
@@ -553,13 +564,13 @@ class FrancyGraph(FrancyOutput):
         ...   options['modal_menus'] = [{
         ...     'title': 'cardinality',
         ...     'funcname': 'cardinality',
-        ...     'is_method': True
+        ...     'funcscope': 'object'
         ...   }]
         ...   return options
         >>> g = FrancyGraph(G, canvas_id='mycanvas', node_options=node_options)
         >>> g.compute()
         >>> g.to_json()
-        '{"id": "mycanvas_graph1", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node2": {"id": "mycanvas_node2", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {"mycanvas_menu3": {"id": "mycanvas_menu3", "title": "cardinality", "callback": {"id": "mycanvas_callback3", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "funcname": "cardinality", "trigger": "click", "knownArgs": ["python", "<object>"], "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge6": {"source": "mycanvas_node2", "weight": 1, "color": "", "target": "mycanvas_node3", "id": "mycanvas_edge6"}, "mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}}, "type": "undirected"}'
+        '{"id": "mycanvas_graph1", "simulation": true, "collapsed": true, "drag": false, "showNeighbours": false, "nodes": {"mycanvas_node2": {"id": "mycanvas_node2", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "1", "color": "", "highlight": true, "layer": 2, "parent": "", "menus": {"mycanvas_menu3": {"id": "mycanvas_menu3", "title": "cardinality", "callback": {"id": "mycanvas_callback3", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["1"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node3": {"id": "mycanvas_node3", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "2", "color": "", "highlight": true, "layer": 3, "parent": "", "menus": {"mycanvas_menu4": {"id": "mycanvas_menu4", "title": "cardinality", "callback": {"id": "mycanvas_callback4", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["2"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node4": {"id": "mycanvas_node4", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "3", "color": "", "highlight": true, "layer": 4, "parent": "", "menus": {"mycanvas_menu5": {"id": "mycanvas_menu5", "title": "cardinality", "callback": {"id": "mycanvas_callback5", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["3"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}, "mycanvas_node5": {"id": "mycanvas_node5", "x": 0, "y": 0, "type": "diamond", "size": 10, "title": "4", "color": "", "highlight": true, "layer": 5, "parent": "", "menus": {"mycanvas_menu6": {"id": "mycanvas_menu6", "title": "cardinality", "callback": {"id": "mycanvas_callback6", "language": "python", "funcname": "cardinality", "trigger": "click", "knownArgs": ["4"], "funcscope": "object", "requiredArgs": {}}, "menus": {}, "messages": {}}}, "messages": {}, "callbacks": {}}}, "links": {"mycanvas_edge6": {"source": "mycanvas_node2", "weight": 1, "color": "", "target": "mycanvas_node3", "id": "mycanvas_edge6"}, "mycanvas_edge7": {"source": "mycanvas_node3", "weight": 1, "color": "", "target": "mycanvas_node4", "id": "mycanvas_edge7"}, "mycanvas_edge8": {"source": "mycanvas_node4", "weight": 1, "color": "", "target": "mycanvas_node5", "id": "mycanvas_edge8"}}, "type": "undirected"}'
         """
         counter = self.counter
         if not self.graphType:
@@ -607,6 +618,11 @@ class FrancyGraph(FrancyOutput):
                 if 'modal_menus' in node_specifics:
                     menus = {}
                     for m in node_specifics['modal_menus']:
+                        if 'funcscope' in m:
+                            if m['funcscope'] == 'object':
+                                m['object'] = n
+                            if m['funcscope'] == 'class':
+                                m['object'] = n.__class__
                         men = FrancyMenu.from_dict(self.canvas_id, counter, data=m)
                         menus[men.id] = men.to_dict()
                     options['menus'] = menus
@@ -615,7 +631,7 @@ class FrancyGraph(FrancyOutput):
             if 'title' not in options or not options['title']:
                 options['title'] = str(n)
             if 'layer' not in options or options['layer'] is None:
-                options['layer'] = int(counter)  # TODO remplacer par un compteur de nœuds
+                options['layer'] = int(counter)  # TODO could be replaced by a specific counter
             for children_list_name in ['menus', 'messages', 'callbacks']:
                 if children_list_name not in options:
                     options[children_list_name] = {}
@@ -656,6 +672,9 @@ class FrancyGraph(FrancyOutput):
                     self.nodes[match[tgt]]['parent'] = self.nodes[match[src]]['id']
         """
     def to_dict(self):
+        r"""
+        Test:
+        """
         res = super(FrancyGraph, self).to_dict()
         if 'graphType' in res:
             res['type'] = res['graphType']
