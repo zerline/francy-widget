@@ -43,6 +43,7 @@ class FrancyWidget(Text):
         >>> w.value.__class__
         <class 'networkx.classes.graph.Graph'>
         """
+        super(FrancyWidget, self).__init__()
         self.value = obj
         self.title = title
         if counter > -1:
