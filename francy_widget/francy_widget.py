@@ -16,19 +16,6 @@ try:
 except:
     from francy_adapter import FrancyAdapter # for doctesting
 
-
-def Trigger(s):
-    try:
-        c = loads(s)
-        assert('funcname' in c and 'knownArgs' in c and type(c['knownArgs']) == type([]))
-    except:
-        print("KO")
-    if 'funcscope' in c and c['funcscope'] in ['object', 'class']:
-        o = eval(c['knownArgs'][0])
-        print(getattr(o, c['funcname']).__call__(*c['knownArgs'][1:]))
-    else:
-        print(eval(c['funcname']).__call__(*c['knownArgs']))
-
 @register
 class FrancyWidget(Text):
     r"""
