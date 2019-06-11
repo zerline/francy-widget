@@ -7,7 +7,7 @@ AUTHORS ::
     Odile Bénassy
 
 """
-from ipywidgets import register
+from ipywidgets import Output, VBox, register
 from ipywidgets.widgets.widget_string import Text
 from traitlets import Any
 from json import loads # for callbacks
@@ -16,18 +16,22 @@ try:
 except:
     from francy_adapter import FrancyAdapter # for doctesting
 
+default_output = Output(layout={'border': '1px solid black'})
 
 def Trigger(s):
     try:
         c = loads(s)
         assert('funcname' in c and 'knownArgs' in c and type(c['knownArgs']) == type([]))
     except:
-        print("KO")
-    if 'funcscope' in c and c['funcscope'] in ['object', 'class']:
-        o = eval(c['knownArgs'][0])
-        print(getattr(o, c['funcname']).__call__(*c['knownArgs'][1:]))
+        ret = "KO"
     else:
-        print(eval(c['funcname']).__call__(*c['knownArgs']))
+        if 'funcscope' in c and c['funcscope'] in ['object', 'class']:
+            o = eval(c['knownArgs'][0])
+            ret = getattr(o, c['funcname']).__call__(*c['knownArgs'][1:])
+        else:
+            ret = eval(c['funcname']).__call__(*c['knownArgs'])
+    default_output.clear_output()
+    default_output.append_stdout(ret)
 
 @register
 class FrancyWidget(Text):
@@ -169,3 +173,47 @@ class FrancyWidget(Text):
             display(data, raw=True)  # noqa
 
             self._handle_displayed(**kws)
+
+@register
+class FrancyWidgetWithOutput(VBox):
+    value = Any()  # same value as its FrancyWidget
+    #adapter = FrancyAdapter()
+    def __init__(self, obj=None, output=default_output, title="", counter=-1, menus=[], messages=[],
+                 node_options=None, link_options=None, **kws):
+        r"""
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> w = FrancyWidget(G)
+        >>> w.value.__class__
+        <class 'networkx.classes.graph.Graph'>
+        """
+        super(FrancyWidgetWithOutput, self).__init__()
+        self.francy = FrancyWidget(obj, title, counter, menus, messages, node_options, link_options, **kws)
+        print(self.francy.__dict__)
+        self.output = output
+        print(self.output.__dict__)
+        self.value = obj
+        self.children = (self.francy, self.output)
+
+    def validate(self, obj, obj_class=None):
+        r"""
+        Validate object type.
+        """
+        return self.francy.validate(obj, obj_class)
+
+    def set_value(self, obj, **kws):
+        r"""
+        Check compatibility, then set editor value.
+
+        Test:
+
+        >>> from networkx import Graph
+        >>> G = Graph([(1, 2), (2, 3), (3, 4)])
+        >>> w = FrancyWidget()
+        >>> w.set_value(G)
+        >>> len(w.canvas_id)
+        32
+        """
+        self.francy.set_value(obj, **kws)
