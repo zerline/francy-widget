@@ -7,6 +7,8 @@ Francy Python adapter for representing graphs in Jupyter
 .. image:: https://mybinder.org/badge_logo.svg
  :target: https://mybinder.org/v2/gh/zerline/francy-widget/master?filepath=demo_FrancyWidget.ipynb
 
+Based on Francy http://github.com/gap-packages/francy
+
 
 Installation
 ------------
@@ -27,6 +29,13 @@ and other often used commands. Should you wish too, you can use the
 shorthand::
 
     $ make install
+
+# For JupyterLab
+jupyter lab build
+
+# For Notebook
+jupyter nbextension enable --py --sys-prefix jupyter_francy
+
 
 Usage
 -----

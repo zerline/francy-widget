@@ -35,7 +35,7 @@ setup_args = {
     'keywords': ['jupyter', 'widget', 'graph', 'francy'],
     'packages': ['francy_widget'],
     'zip_safe': False,
-    'install_requires': ['ipywidgets>=7.0.0', 'networkx', 'jupyter-francy', 'Sphinx']
+    'install_requires': ['pip', 'ipywidgets>=7.0.0', 'networkx', 'jupyter-francy', 'Sphinx']
 }
 
 setup(**setup_args)
