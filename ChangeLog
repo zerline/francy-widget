@@ -1,2 +1,7 @@
 * 0.3.0
-	A better default for layers, at least for posets.
+	* A better default for layers, at least for posets.
+	* Unique identifiers for all Francy displayed objects, on a random base
+
+* 0.2.0
+	* Example notebooks; Non Decreasing Parking Functions ; Emmy Noether's descent.
+
