@@ -31,10 +31,12 @@ shorthand::
     $ make install
 
 # For JupyterLab
-jupyter lab build
+
+    $ jupyter lab build
 
 # For Notebook
-jupyter nbextension enable --py --sys-prefix jupyter_francy
+
+    $ jupyter nbextension enable --py --sys-prefix jupyter_francy
 
 
 Usage
